@@ -35,10 +35,50 @@ export class BoardComponent implements OnInit {
       console.log(newPos);
     }
 
-    // Returns an array of all valid position objects for the given position
+    // Returns an array of all valid position objects for the given piece
     // Return Type: ArrayList[]
-    function getLegalMoves(pos) {
+    function getLegalMoves(square, piece, boardPos, orientation) {
+      let pieceType : string;
+      let pieceColor : string;
+      let row : number;
+      let col : string;
+      let moves : Array<string>;
 
+      //pieceType will return uppercase symbol
+      pieceType = piece.toString()[1];
+      //pieceColor will return lowercase char ('w' or 'b')
+      pieceColor = piece.toString()[0];
+
+      row = +square.toString()[1];
+      col = square.toString()[0];
+
+      console.log(col);
+      console.log(row);
+
+      // console.log(String.fromCharCode(col.charCodeAt(0) + 1));
+      // console.log((row + 1));
+
+      if (orientation == "white") {
+        if (pieceColor == "w") {
+          switch (pieceType){
+            case "P":
+              break;
+            case "R":
+              break;
+            case "B":
+              break;
+            case "N":
+              break;
+            case "Q":
+              break;
+            case "K":
+              break;
+          }
+        }
+        if (pieceColor == "b") {
+
+        }
+      }
     }
 
     // Returns board with promoted chess piece
@@ -77,7 +117,21 @@ export class BoardComponent implements OnInit {
 
     //Activates whenever mouse enters square
     function onMouseoverSquare(square, piece, boardPos, orientation){
+      if (piece) {
+        console.log("Mouseover() was called!");
+        console.log("square:");
+        console.log(square);
+        console.log("piece:");
+        console.log(piece);
+        console.log("boardPos:");
+        console.log(boardPos);
+        console.log("orientation:");
+        console.log(orientation);
 
+        console.log("\n");
+        console.log("TEST getLegalMoves()");
+        getLegalMoves(square, piece, boardPos, orientation)
+      }
     }
 
     //Activates whenever mouse leaves square
