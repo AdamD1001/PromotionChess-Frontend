@@ -35,6 +35,36 @@ export class BoardComponent implements OnInit {
       console.log(newPos);
     }
 
+    // Returns an array of all valid position objects for the given position
+    // Return Type: ArrayList[]
+    function getLegalMoves(pos) {
+
+    }
+
+    // Returns board with promoted chess piece
+    // Return Type: Fen String
+    function promote(oldBoardObj, newBoardObj, newPos) {
+
+    }
+
+    // Returns true if a piece was taken between 2 board states
+    // Return Type: boolean
+    function wasPieceTaken(oldBoardObj, newBoardObj) {
+
+    }
+
+    // Outlines all legal moves for given pos
+    // Return Type: void
+    function showLegalMoves(pos) {
+
+    }
+
+    // Removes outlines of all legal moves for given pos
+    // Return Type: void
+    function hideLegalMoves(pos) {
+
+    }
+
     // Activates whenever player-drag move has been made
     function onDrop(source, target, piece, newPos, oldPos, orientation) {
 
