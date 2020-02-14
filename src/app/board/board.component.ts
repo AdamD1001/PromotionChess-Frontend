@@ -38,44 +38,168 @@ export class BoardComponent implements OnInit {
     function getLegalMoves(square, piece, boardPos, orientation) {
       let pieceType : string;
       let pieceColor : string;
+      // Represents indexes of allSquares array that corresponds with the given square
       let row : number;
-      let col : string;
-      let moves : Array<string>;
+      let col : number;
+      let moves : string[] = [];
+      let allSquares : Array<string[]>;
+
+      // 2D Array of all square combinations
+      allSquares = [["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"],
+      ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"],
+      ["a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6"],
+      ["a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5"],
+      ["a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4"],
+      ["a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3"],
+      ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
+      ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]];
+
+      // Assign row and col values
+      for (let i: number = 0; i < allSquares.length; i++) {
+        if (allSquares[i].includes(square)) {
+          row = i;
+          col = allSquares[i].indexOf(square)
+        }
+      }
 
       //pieceType will return uppercase symbol
       pieceType = piece.toString()[1];
       //pieceColor will return lowercase char ('w' or 'b')
       pieceColor = piece.toString()[0];
 
-      row = +square.toString()[1];
-      col = square.toString()[0];
-
-      console.log(col);
-      console.log(row);
-
-      // console.log(String.fromCharCode(col.charCodeAt(0) + 1));
-      // console.log((row + 1));
-
+      // If piece is Pawn
+      // TODO: Need clarification on exactly how pawn ATTACK moves work
+      // Can it attack in any 1 distance range (including forward, sideways, back-diagonal, and reverse)
       if (pieceType == "P") {
         if (orientation == "white") {
           if (pieceColor == "w") {
+            // If in home "pawn launch row"
+            if (allSquares[6].includes(square)) {
 
+            }
+            else {
+
+            }
           }
           if (pieceColor == "b") {
+            // If in home "pawn launch row"
+            if (allSquares[1].includes(square)) {
 
+            }
+            else {
+
+            }
           }
         }
       }
       else {
         switch(pieceType) {
+            // Rook
           case "R":
+            // Look up
+            let upIndex : number = row;
+            while (upIndex > 0) {
+              --upIndex;
+              let upSquare : string = allSquares[upIndex][col];
+              // If another piece exists in square
+              if (upSquare in boardPos) {
+                let bogeyPiece : string = boardPos[upSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(upSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(upSquare);
+              }
+            }
+
+            // Look down
+            let downIndex : number = row;
+            while (upIndex < 7) {
+              ++downIndex;
+              let downSquare : string = allSquares[downIndex][col];
+              // If another piece exists in square
+              if (downSquare in boardPos) {
+                let bogeyPiece : string = boardPos[downSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(downSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(downSquare);
+              }
+            }
+
+            // Look left
+            let leftIndex : number = col;
+            while (leftIndex > 0) {
+              --leftIndex;
+              let leftSquare : string = allSquares[row][leftIndex];
+              // If another piece exists in square
+              if (leftSquare in boardPos) {
+                let bogeyPiece : string = boardPos[leftSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(leftSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(leftSquare);
+              }
+            }
+
+            // Look right
+            let rightIndex : number = col;
+            while (rightIndex < 7) {
+              ++rightIndex;
+              let rightSquare : string = allSquares[row][rightIndex];
+              // If another piece exists in square
+              if (rightSquare in boardPos) {
+                let bogeyPiece : string = boardPos[rightSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(rightSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(rightSquare);
+              }
+            }
+
             break;
+
+            // Bishop
           case "B":
             break;
+
+            // Knight
           case "N":
             break;
+
+            // Queen
           case "Q":
             break;
+
+            // King
+            // TODO: isCheckmate function is needed to determine king moves
           case "K":
             break;
           default:
@@ -83,6 +207,7 @@ export class BoardComponent implements OnInit {
             break;
         }
       }
+      return moves;
     }
 
     // Returns board with promoted chess piece
@@ -134,7 +259,7 @@ export class BoardComponent implements OnInit {
 
         console.log("\n");
         console.log("TEST getLegalMoves()");
-        getLegalMoves(square, piece, boardPos, orientation)
+        console.log(getLegalMoves(square, piece, boardPos, orientation));
       }
     }
 
