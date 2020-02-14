@@ -56,26 +56,31 @@ export class BoardComponent implements OnInit {
       // console.log(String.fromCharCode(col.charCodeAt(0) + 1));
       // console.log((row + 1));
 
-      
-      if (orientation == "white") {
-        if (pieceColor == "w") {
-          switch (pieceType){
-            case "P":
-              break;
-            case "R":
-              break;
-            case "B":
-              break;
-            case "N":
-              break;
-            case "Q":
-              break;
-            case "K":
-              break;
+      if (pieceType == "P") {
+        if (orientation == "white") {
+          if (pieceColor == "w") {
+
+          }
+          if (pieceColor == "b") {
+
           }
         }
-        if (pieceColor == "b") {
-
+      }
+      else {
+        switch(pieceType) {
+          case "R":
+            break;
+          case "B":
+            break;
+          case "N":
+            break;
+          case "Q":
+            break;
+          case "K":
+            break;
+          default:
+            console.log("Error in getLegalMoves()! Piece type invalid!");
+            break;
         }
       }
     }
