@@ -21,9 +21,7 @@ export class BoardComponent implements OnInit {
       onDrop: onDrop,
       onMoveEnd: onMoveEnd,
       onMouseoverSquare: onMouseoverSquare,
-      onMouseoutSquare: onMouseoutSquare,
-      onDragStart: onDragStart,
-      onDragEnd: onDragEnd
+      onMouseoutSquare: onMouseoutSquare
     });
 
     // Sends board changes to move-list component
@@ -58,6 +56,7 @@ export class BoardComponent implements OnInit {
       // console.log(String.fromCharCode(col.charCodeAt(0) + 1));
       // console.log((row + 1));
 
+      
       if (orientation == "white") {
         if (pieceColor == "w") {
           switch (pieceType){
@@ -111,7 +110,7 @@ export class BoardComponent implements OnInit {
     }
 
     // Activates whenever animation has occurred (AI has made move)
-    function onMoveEnd(oldPos, newPos){
+    function onMoveEnd(oldPos, newPos) {
 
     }
 
@@ -136,21 +135,6 @@ export class BoardComponent implements OnInit {
 
     //Activates whenever mouse leaves square
     function onMouseoutSquare(square, piece, boardPos, orientation){
-
-    }
-
-    //TODO: onDragStart should not be needed anymore
-    function onDragStart (source, piece, position, orientation) {
-      // if(orientation === 'white' && piece.search(/^w/) === -1) {
-      //   return false;
-      // }
-      // else {
-      //   console.log(source)
-      // }
-    }
-
-    //TODO: onDragEnd should not be needed anymore
-    function onDragEnd (source, piece, position, orientation) {
 
     }
 
