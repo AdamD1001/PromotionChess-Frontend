@@ -71,23 +71,258 @@ export class BoardComponent implements OnInit {
       // TODO: Need clarification on exactly how pawn ATTACK moves work
       // Can it attack in any 1 distance range (including forward, sideways, back-diagonal, and reverse)
       if (pieceType == "P") {
+        let searchRowIndex : number = row;
+        let searchColIndex : number = col;
         if (orientation == "white") {
           if (pieceColor == "w") {
-            // If in home "pawn launch row"
-            if (allSquares[6].includes(square)) {
+            // Look forward
+            searchRowIndex = row - 1;
+            searchColIndex = col;
 
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare);
+                }
+              }
+              else {
+                moves.push(searchSquare);
+                // If in home "pawn launch row"
+                if (allSquares[6].includes(square)) {
+                  searchRowIndex -= 1;
+                  if (0 <= searchRowIndex && searchRowIndex <= 7) {
+                    searchSquare = allSquares[searchRowIndex][searchColIndex];
+                    if (!(searchSquare in boardPos)) {
+                      moves.push(searchSquare);
+                    }
+                  }
+                }
+              }
             }
-            else {
 
+            // Look Forward-Diagonal
+            searchRowIndex = row - 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+              }
+            }
+
+            // Look Sideways
+            searchRowIndex = row;
+            searchColIndex = col;
+            if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+              let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+              if (searchSquare1 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare1];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare1);
+                }
+              }
+              else {
+                moves.push(searchSquare1)
+              }
+            }
+            if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+              let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+              if (searchSquare2 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare2];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare2);
+                }
+              }
+              else {
+                moves.push(searchSquare2)
+              }
+            }
+
+            // Look backward
+            searchRowIndex = row + 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare);
+                }
+              }
+            }
+
+            // Look Backward-Diagonal
+            searchRowIndex = row + 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+              }
             }
           }
+
           if (pieceColor == "b") {
-            // If in home "pawn launch row"
-            if (allSquares[1].includes(square)) {
+            // Look forward
+            searchRowIndex = row + 1;
+            searchColIndex = col;
 
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare);
+                }
+              }
+              else {
+                moves.push(searchSquare);
+                // If in home "pawn launch row"
+                if (allSquares[1].includes(square)) {
+                  searchRowIndex += 1;
+                  if (0 <= searchRowIndex && searchRowIndex <= 7) {
+                    searchSquare = allSquares[searchRowIndex][searchColIndex];
+                    if (!(searchSquare in boardPos)) {
+                      moves.push(searchSquare);
+                    }
+                  }
+                }
+              }
             }
-            else {
 
+            // Look Forward-Diagonal
+            searchRowIndex = row + 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+              }
+            }
+
+            // Look Sideways
+            searchRowIndex = row;
+            searchColIndex = col;
+            if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+              let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+              if (searchSquare1 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare1];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare1);
+                }
+              }
+              else {
+                moves.push(searchSquare1)
+              }
+            }
+            if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+              let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+              if (searchSquare2 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare2];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare2);
+                }
+              }
+              else {
+                moves.push(searchSquare2)
+              }
+            }
+
+            // Look backward
+            searchRowIndex = row - 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare);
+                }
+              }
+            }
+
+            // Look Backward-Diagonal
+            searchRowIndex = row - 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+              }
             }
           }
         }
