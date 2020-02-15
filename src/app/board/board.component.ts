@@ -188,6 +188,102 @@ export class BoardComponent implements OnInit {
 
             // Bishop
           case "B":
+            // Look North East
+            let NErowIndex : number = row;
+            let NEcolIndex : number = col;
+            while (NErowIndex > 0 && NEcolIndex < 7) {
+              --NErowIndex;
+              ++NEcolIndex;
+              let NESquare : string = allSquares[NErowIndex][NEcolIndex];
+              // If another piece exists in square
+              if (NESquare in boardPos) {
+                let bogeyPiece : string = boardPos[NESquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(NESquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(NESquare);
+              }
+            }
+
+            // Look South East
+            let SErowIndex : number = row;
+            let SEcolIndex : number = col;
+            while (SErowIndex < 7 && SEcolIndex < 7) {
+              ++SErowIndex;
+              ++SEcolIndex;
+              let SESquare : string = allSquares[SErowIndex][SEcolIndex];
+              // If another piece exists in square
+              if (SESquare in boardPos) {
+                let bogeyPiece : string = boardPos[SESquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(SESquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(SESquare);
+              }
+            }
+
+            // Look South West
+            let SWrowIndex : number = row;
+            let SWcolIndex : number = col;
+            while (SWrowIndex < 7 && SWcolIndex > 0) {
+              ++SWrowIndex;
+              --SWcolIndex;
+              let SWSquare : string = allSquares[SWrowIndex][SWcolIndex];
+              // If another piece exists in square
+              if (SWSquare in boardPos) {
+                let bogeyPiece : string = boardPos[SWSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(SWSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(SWSquare);
+              }
+            }
+
+            // Look North West
+            let NWrowIndex : number = row;
+            let NWcolIndex : number = col;
+            while (NWrowIndex > 0 && NWcolIndex > 0) {
+              --NWrowIndex;
+              --NWcolIndex;
+              let NWSquare : string = allSquares[NWrowIndex][NWcolIndex];
+              // If another piece exists in square
+              if (NWSquare in boardPos) {
+                let bogeyPiece : string = boardPos[NWSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(NWSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(NWSquare);
+              }
+            }
+
             break;
 
             // Knight
