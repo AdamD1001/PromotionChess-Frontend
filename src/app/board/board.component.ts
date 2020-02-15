@@ -93,14 +93,17 @@ export class BoardComponent implements OnInit {
         }
       }
       else {
+        let searchRowIndex : number = row;
+        let searchColIndex : number = col;
+
         switch(pieceType) {
             // Rook
           case "R":
             // Look up
-            let upIndex : number = row;
-            while (upIndex > 0) {
-              --upIndex;
-              let upSquare : string = allSquares[upIndex][col];
+            searchRowIndex = row;
+            while (searchRowIndex > 0) {
+              --searchRowIndex;
+              let upSquare : string = allSquares[searchRowIndex][col];
               // If another piece exists in square
               if (upSquare in boardPos) {
                 let bogeyPiece : string = boardPos[upSquare];
@@ -119,10 +122,10 @@ export class BoardComponent implements OnInit {
             }
 
             // Look down
-            let downIndex : number = row;
-            while (upIndex < 7) {
-              ++downIndex;
-              let downSquare : string = allSquares[downIndex][col];
+            searchRowIndex = row;
+            while (searchRowIndex < 7) {
+              ++searchRowIndex;
+              let downSquare : string = allSquares[searchRowIndex][col];
               // If another piece exists in square
               if (downSquare in boardPos) {
                 let bogeyPiece : string = boardPos[downSquare];
@@ -141,10 +144,10 @@ export class BoardComponent implements OnInit {
             }
 
             // Look left
-            let leftIndex : number = col;
-            while (leftIndex > 0) {
-              --leftIndex;
-              let leftSquare : string = allSquares[row][leftIndex];
+            searchColIndex = col;
+            while (searchColIndex > 0) {
+              --searchColIndex;
+              let leftSquare : string = allSquares[row][searchColIndex];
               // If another piece exists in square
               if (leftSquare in boardPos) {
                 let bogeyPiece : string = boardPos[leftSquare];
@@ -163,10 +166,10 @@ export class BoardComponent implements OnInit {
             }
 
             // Look right
-            let rightIndex : number = col;
-            while (rightIndex < 7) {
-              ++rightIndex;
-              let rightSquare : string = allSquares[row][rightIndex];
+            searchColIndex = col;
+            while (searchColIndex < 7) {
+              ++searchColIndex;
+              let rightSquare : string = allSquares[row][searchColIndex];
               // If another piece exists in square
               if (rightSquare in boardPos) {
                 let bogeyPiece : string = boardPos[rightSquare];
@@ -189,12 +192,12 @@ export class BoardComponent implements OnInit {
             // Bishop
           case "B":
             // Look North East
-            let NErowIndex : number = row;
-            let NEcolIndex : number = col;
-            while (NErowIndex > 0 && NEcolIndex < 7) {
-              --NErowIndex;
-              ++NEcolIndex;
-              let NESquare : string = allSquares[NErowIndex][NEcolIndex];
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex > 0 && searchColIndex < 7) {
+              --searchRowIndex;
+              ++searchColIndex;
+              let NESquare : string = allSquares[searchRowIndex][searchColIndex];
               // If another piece exists in square
               if (NESquare in boardPos) {
                 let bogeyPiece : string = boardPos[NESquare];
@@ -213,12 +216,12 @@ export class BoardComponent implements OnInit {
             }
 
             // Look South East
-            let SErowIndex : number = row;
-            let SEcolIndex : number = col;
-            while (SErowIndex < 7 && SEcolIndex < 7) {
-              ++SErowIndex;
-              ++SEcolIndex;
-              let SESquare : string = allSquares[SErowIndex][SEcolIndex];
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex < 7 && searchColIndex < 7) {
+              ++searchRowIndex;
+              ++searchColIndex;
+              let SESquare : string = allSquares[searchRowIndex][searchColIndex];
               // If another piece exists in square
               if (SESquare in boardPos) {
                 let bogeyPiece : string = boardPos[SESquare];
@@ -237,12 +240,12 @@ export class BoardComponent implements OnInit {
             }
 
             // Look South West
-            let SWrowIndex : number = row;
-            let SWcolIndex : number = col;
-            while (SWrowIndex < 7 && SWcolIndex > 0) {
-              ++SWrowIndex;
-              --SWcolIndex;
-              let SWSquare : string = allSquares[SWrowIndex][SWcolIndex];
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex < 7 && searchColIndex > 0) {
+              ++searchRowIndex;
+              --searchColIndex;
+              let SWSquare : string = allSquares[searchRowIndex][searchColIndex];
               // If another piece exists in square
               if (SWSquare in boardPos) {
                 let bogeyPiece : string = boardPos[SWSquare];
@@ -261,12 +264,12 @@ export class BoardComponent implements OnInit {
             }
 
             // Look North West
-            let NWrowIndex : number = row;
-            let NWcolIndex : number = col;
-            while (NWrowIndex > 0 && NWcolIndex > 0) {
-              --NWrowIndex;
-              --NWcolIndex;
-              let NWSquare : string = allSquares[NWrowIndex][NWcolIndex];
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex > 0 && searchColIndex > 0) {
+              --searchRowIndex;
+              --searchColIndex;
+              let NWSquare : string = allSquares[searchRowIndex][searchColIndex];
               // If another piece exists in square
               if (NWSquare in boardPos) {
                 let bogeyPiece : string = boardPos[NWSquare];
@@ -292,6 +295,10 @@ export class BoardComponent implements OnInit {
 
             // Queen
           case "Q":
+
+
+
+
             break;
 
             // King
