@@ -295,9 +295,189 @@ export class BoardComponent implements OnInit {
 
             // Queen
           case "Q":
+            // Look up
+            searchRowIndex = row;
+            while (searchRowIndex > 0) {
+              --searchRowIndex;
+              let upSquare : string = allSquares[searchRowIndex][col];
+              // If another piece exists in square
+              if (upSquare in boardPos) {
+                let bogeyPiece : string = boardPos[upSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(upSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(upSquare);
+              }
+            }
 
+            // Look down
+            searchRowIndex = row;
+            while (searchRowIndex < 7) {
+              ++searchRowIndex;
+              let downSquare : string = allSquares[searchRowIndex][col];
+              // If another piece exists in square
+              if (downSquare in boardPos) {
+                let bogeyPiece : string = boardPos[downSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(downSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(downSquare);
+              }
+            }
 
+            // Look left
+            searchColIndex = col;
+            while (searchColIndex > 0) {
+              --searchColIndex;
+              let leftSquare : string = allSquares[row][searchColIndex];
+              // If another piece exists in square
+              if (leftSquare in boardPos) {
+                let bogeyPiece : string = boardPos[leftSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(leftSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(leftSquare);
+              }
+            }
 
+            // Look right
+            searchColIndex = col;
+            while (searchColIndex < 7) {
+              ++searchColIndex;
+              let rightSquare : string = allSquares[row][searchColIndex];
+              // If another piece exists in square
+              if (rightSquare in boardPos) {
+                let bogeyPiece : string = boardPos[rightSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(rightSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(rightSquare);
+              }
+            }
+
+            // Look North East
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex > 0 && searchColIndex < 7) {
+              --searchRowIndex;
+              ++searchColIndex;
+              let NESquare : string = allSquares[searchRowIndex][searchColIndex];
+              // If another piece exists in square
+              if (NESquare in boardPos) {
+                let bogeyPiece : string = boardPos[NESquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(NESquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(NESquare);
+              }
+            }
+
+            // Look South East
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex < 7 && searchColIndex < 7) {
+              ++searchRowIndex;
+              ++searchColIndex;
+              let SESquare : string = allSquares[searchRowIndex][searchColIndex];
+              // If another piece exists in square
+              if (SESquare in boardPos) {
+                let bogeyPiece : string = boardPos[SESquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(SESquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(SESquare);
+              }
+            }
+
+            // Look South West
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex < 7 && searchColIndex > 0) {
+              ++searchRowIndex;
+              --searchColIndex;
+              let SWSquare : string = allSquares[searchRowIndex][searchColIndex];
+              // If another piece exists in square
+              if (SWSquare in boardPos) {
+                let bogeyPiece : string = boardPos[SWSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(SWSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(SWSquare);
+              }
+            }
+
+            // Look North West
+            searchRowIndex = row;
+            searchColIndex = col;
+            while (searchRowIndex > 0 && searchColIndex > 0) {
+              --searchRowIndex;
+              --searchColIndex;
+              let NWSquare : string = allSquares[searchRowIndex][searchColIndex];
+              // If another piece exists in square
+              if (NWSquare in boardPos) {
+                let bogeyPiece : string = boardPos[NWSquare];
+                let bogeyColor : string = bogeyPiece[0];
+                // Taking your own piece is not legal
+                if (pieceColor != bogeyColor) {
+                  moves.push(NWSquare);
+                }
+                // Another piece has been reached, cannot proceed any further
+                break;
+              }
+              // No piece detected, add square to list of legal moves
+              else {
+                moves.push(NWSquare);
+              }
+            }
 
             break;
 
