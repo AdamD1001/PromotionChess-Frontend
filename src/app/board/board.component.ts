@@ -6,6 +6,7 @@ declare var ChessBoard: any;
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
+
 export class BoardComponent implements OnInit {
   title = 'PromoChessFrontend';
 
@@ -869,14 +870,41 @@ export class BoardComponent implements OnInit {
 
     // Outlines all legal moves for given pos
     // Return Type: void
-    function showLegalMoves(pos) {
+    function showLegalMoves(square, piece, boardPos, orientation) {
+      let legalMoves : string[] = getLegalMoves(square, piece, boardPos, orientation);
+      for (let i : number = 0; i < legalMoves.length; i++) {
+        let tempSqName : string = legalMoves[i];
+        let squareElement : Element = document.getElementsByClassName("square-" + tempSqName)[0];
 
+        // Create Overlay Div
+        let newElement : Element = document.createElement('div');
+        newElement.className = "legal-overlay";
+        newElement.id = `${tempSqName}-overlay`;
+        newElement.setAttribute("style", "background-color: springgreen; opacity: 0.4; width: 99px; height: 99px; position: relative; z-index: 0; float: right");
+        squareElement.insertAdjacentElement('afterbegin', newElement);
+
+        // Make sure each time to make all chess-piece images float above
+        // TODO: See if this style attribute can be applied fewer times, rather than every method call
+        let imgElements : HTMLCollection = document.getElementsByClassName('piece-417db');
+        for (let i : number = 0; i < imgElements.length; i++) {
+          let tempElement : Element = imgElements[i];
+          let tempAttr : string = tempElement.getAttribute("style");
+          tempAttr += "; z-index: 0; position: absolute;";
+          tempElement.setAttribute("style", tempAttr);
+        }
+      }
     }
 
     // Removes outlines of all legal moves for given pos
     // Return Type: void
-    function hideLegalMoves(pos) {
-
+    function hideLegalMoves(square, piece, boardPos, orientation) {
+      let overlayElements : HTMLCollection = document.getElementsByClassName("legal-overlay");
+      console.log(overlayElements);
+      // While there is a first element in overlayElements
+      while (overlayElements[0]) {
+        let overlaySq : Element = overlayElements[0];
+        overlaySq.parentNode.removeChild(overlaySq);
+      }
     }
 
     // Activates whenever player-drag move has been made
@@ -904,13 +932,16 @@ export class BoardComponent implements OnInit {
 
         console.log("\n");
         console.log("TEST getLegalMoves()");
+        showLegalMoves(square, piece, boardPos, orientation);
         console.log(getLegalMoves(square, piece, boardPos, orientation));
       }
     }
 
     //Activates whenever mouse leaves square
     function onMouseoutSquare(square, piece, boardPos, orientation){
-
+      if (piece) {
+        hideLegalMoves(square, piece, boardPos, orientation);
+      }
     }
 
 
