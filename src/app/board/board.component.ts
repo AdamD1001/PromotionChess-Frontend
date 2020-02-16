@@ -719,6 +719,133 @@ export class BoardComponent implements OnInit {
             // King
             // TODO: isCheckmate function is needed to determine king moves
           case "K":
+            // Look Up
+            searchRowIndex = row - 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare1 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare1];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare1);
+                }
+              }
+              else {
+                moves.push(searchSquare1);
+              }
+            }
+
+            // Look Down
+            searchRowIndex = row + 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex];
+              if (searchSquare1 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare1];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare1);
+                }
+              }
+              else {
+                moves.push(searchSquare1);
+              }
+            }
+
+            // Look Sideways
+            searchRowIndex = row;
+            searchColIndex = col;
+            if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+              let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+              if (searchSquare1 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare1];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare1);
+                }
+              }
+              else {
+                moves.push(searchSquare1)
+              }
+            }
+            if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+              let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+              if (searchSquare2 in boardPos) {
+                let bogeyPiece : string = boardPos[searchSquare2];
+                let bogeyColor : string = bogeyPiece[0];
+                if (pieceColor != bogeyColor) {
+                  moves.push(searchSquare2);
+                }
+              }
+              else {
+                moves.push(searchSquare2)
+              }
+            }
+
+            // Look Up-Diagonal
+            searchRowIndex = row - 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+                else {
+                  moves.push(searchSquare1);
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+                else {
+                  moves.push(searchSquare2);
+                }
+              }
+            }
+
+            // Look Down-Diagonal
+            searchRowIndex = row + 1;
+            searchColIndex = col;
+            if (0 <= searchRowIndex && searchRowIndex <= 7) {
+              if (0 <= (searchColIndex - 1) && (searchColIndex - 1) <= 7) {
+                let searchSquare1 : string = allSquares[searchRowIndex][searchColIndex - 1];
+                if (searchSquare1 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare1];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare1);
+                  }
+                }
+                else {
+                  moves.push(searchSquare1);
+                }
+              }
+              if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
+                let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
+                if (searchSquare2 in boardPos) {
+                  let bogeyPiece : string = boardPos[searchSquare2];
+                  let bogeyColor : string = bogeyPiece[0];
+                  if (pieceColor != bogeyColor) {
+                    moves.push(searchSquare2);
+                  }
+                }
+                else {
+                  moves.push(searchSquare2);
+                }
+              }
+            }
             break;
           default:
             console.log("Error in getLegalMoves()! Piece type invalid!");
