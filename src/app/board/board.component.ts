@@ -859,12 +859,115 @@ export class BoardComponent implements OnInit {
     // Returns board with promoted chess piece
     // Return Type: Fen String
     function promote(oldBoardObj, newBoardObj, newPos) {
+      let enemyPiece: any;
+      let promotingPiece: any;
+      let newPromotion: any;
 
+      //Finds and stores enemy piece type
+        if(wasPieceTaken(oldBoardObj, newBoardObj)){
+          for(let key in oldBoardObj){
+            if(key === newPos){
+              enemyPiece = oldBoardObj[key]
+            }
+          }
+          //Finds and stores current player piece type
+          for(let key in newBoardObj){
+            if(key === newPos){
+              promotingPiece = newBoardObj[key]
+            }
+          }
+        }
+
+        //Still need to compare attacking and taken pieces in order to determine what rank to promote to
+        if(promotingPiece == "wP" || promotingPiece == "bP"){
+          if(enemyPiece == "wK" || enemyPiece == "bK"){
+            for(let key in newBoardObj){
+              if(key === newPos){
+                if(promotingPiece == "wP"){
+                  newBoardObj[key] = "wB";
+                }else {
+                  newBoardObj[key] = "bB";
+                }
+              }
+            }
+          }else if(enemyPiece == "wQ" || enemyPiece == "bQ"){
+            for(let key in newBoardObj){
+              if(key === newPos){
+                if(promotingPiece == "wP"){
+                  newBoardObj[key] = "wK";
+                }else {
+                  newBoardObj[key] = "bK";
+                }
+              }
+            }
+          }else {
+            for(let key in newBoardObj){
+              if(key === newPos){
+                if(promotingPiece == "wP"){
+                  newBoardObj[key] = "wR";
+                }else {
+                  newBoardObj[key] = "bR";
+                }
+              }
+            }
+          }
+        }else if(promotingPiece == "wR" || promotingPiece == "bR"){
+            if(enemyPiece == "wQ" || enemyPiece == "bQ"){
+              for(let key in newBoardObj){
+                if(key === newPos){
+                  if(promotingPiece == "wR"){
+                    newBoardObj[key] = "wK";
+                  }else {
+                    newBoardObj[key] = "bK";
+                  }
+                }
+              }
+            }else {
+              for(let key in newBoardObj){
+                if(key === newPos){
+                  if(promotingPiece == "wR"){
+                    newBoardObj[key] = "wB";
+                  }else {
+                    newBoardObj[key] = "bB";
+                  }
+                }
+              }
+            }
+        }else if(promotingPiece == "wB" || promotingPiece == "bB"){
+          for(let key in newBoardObj){
+            if(key === newPos){
+              if(promotingPiece == "wB"){
+                newBoardObj[key] = "wK";
+              }else {
+                newBoardObj[key] = "bK";
+              }
+            }
+          }
+        }else{
+            for(let key in newBoardObj){
+              if(key == newPos){
+                if(promotingPiece == "wK"){
+                  newBoardObj[key] = "wQ"
+                }else {
+                  newBoardObj[key] = "bQ"
+                }
+              }
+            }
+        }
+
+        //returns the newly changed Board Object as a FEN String, 
+        //if No change was made then FEN will be returned unchanged
+        return ChessBoard.objToFen(newBoardObj)
     }
 
     // Returns true if a piece was taken between 2 board states
     // Return Type: boolean
     function wasPieceTaken(oldBoardObj, newBoardObj) {
+        if(oldBoardObj.length < newBoardObj.legnth){
+          return true
+        } else {
+          return false
+        }
 
     }
 
@@ -947,6 +1050,19 @@ export class BoardComponent implements OnInit {
 
   }
   showPosition() {
-      console.log(this.board.position().a8)
+    let p = 'c2';
+    let pos = this.board.position();
+      console.log(Object.entries(this.board.position()).length)
+      for(let [key, value] of Object.entries(this.board.position())){
+        if(key === p){
+          console.log(key + ": " + value)
+        }
+      }
+      for(let key in pos) {
+        if(key == p){
+          pos[key] = "wQ"
+          console.log(ChessBoard.objToFen(pos))
+        }
+      }
     }
 }
