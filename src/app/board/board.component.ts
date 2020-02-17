@@ -983,7 +983,7 @@ export class BoardComponent implements OnInit {
         let newElement : Element = document.createElement('div');
         newElement.className = "legal-overlay";
         newElement.id = `${tempSqName}-overlay`;
-        newElement.setAttribute("style", "background-color: springgreen; opacity: 0.4; width: 99px; height: 99px; position: relative; z-index: 0; float: right");
+        newElement.setAttribute("style", "background-color: springgreen; opacity: 0.4; width: 100%; height: 100%; position: relative; z-index: 0; float: right");
         squareElement.insertAdjacentElement('afterbegin', newElement);
 
         // Make sure each time to make all chess-piece images float above
