@@ -12,10 +12,14 @@ export class BoardComponent implements OnInit {
 
   constructor(){}
 
-  board: any;
+  startBoard: any;
 
-  ngOnInit(): void{
-    this.board = ChessBoard('board1', {
+  changeBoard: Function = (boardObj) => {
+    this.startBoard.position(boardObj, true)
+}
+
+  public ngOnInit(): void{
+    this.startBoard = ChessBoard('board1', {
       position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
       draggable: true,
       onChange: onChange,
@@ -25,13 +29,10 @@ export class BoardComponent implements OnInit {
       onMouseoutSquare: onMouseoutSquare
     });
 
+    let board = this.startBoard;
+
     // Sends board changes to move-list component
     function onChange (oldPos, newPos) {
-      console.log("onChange() was called!: ");
-      console.log("oldPos:");
-      console.log(oldPos);
-      console.log("newPos:");
-      console.log(newPos);
     }
 
     // Returns an array of all valid position objects for the given piece
@@ -858,24 +859,18 @@ export class BoardComponent implements OnInit {
 
     // Returns board with promoted chess piece
     // Return Type: Fen String
-    function promote(oldBoardObj, newBoardObj, newPos) {
+    function promote(oldBoardObj, newBoardObj, newPos, piece) {
       let enemyPiece: any;
-      let promotingPiece: any;
+      let promotingPiece = piece;
       let newPromotion: any;
 
       //Finds and stores enemy piece type
-        if(wasPieceTaken(oldBoardObj, newBoardObj)){
           for(let key in oldBoardObj){
             if(key === newPos){
               enemyPiece = oldBoardObj[key]
             }
-          }
           //Finds and stores current player piece type
-          for(let key in newBoardObj){
-            if(key === newPos){
-              promotingPiece = newBoardObj[key]
-            }
-          }
+          
         }
 
         //Still need to compare attacking and taken pieces in order to determine what rank to promote to
@@ -937,16 +932,16 @@ export class BoardComponent implements OnInit {
           for(let key in newBoardObj){
             if(key === newPos){
               if(promotingPiece == "wB"){
-                newBoardObj[key] = "wK";
+                newBoardObj[key] = "wN";
               }else {
-                newBoardObj[key] = "bK";
+                newBoardObj[key] = "bN";
               }
             }
           }
         }else{
             for(let key in newBoardObj){
               if(key == newPos){
-                if(promotingPiece == "wK"){
+                if(promotingPiece == "wN"){
                   newBoardObj[key] = "wQ"
                 }else {
                   newBoardObj[key] = "bQ"
@@ -957,13 +952,15 @@ export class BoardComponent implements OnInit {
 
         //returns the newly changed Board Object as a FEN String, 
         //if No change was made then FEN will be returned unchanged
-        return ChessBoard.objToFen(newBoardObj)
+        return newBoardObj
     }
 
     // Returns true if a piece was taken between 2 board states
     // Return Type: boolean
     function wasPieceTaken(oldBoardObj, newBoardObj) {
-        if(oldBoardObj.length < newBoardObj.legnth){
+      console.log(Object.entries(oldBoardObj).length)
+      console.log(Object.entries(newBoardObj).length)
+        if(Object.entries(oldBoardObj).length > Object.entries(newBoardObj).length){
           return true
         } else {
           return false
@@ -1012,7 +1009,32 @@ export class BoardComponent implements OnInit {
 
     // Activates whenever player-drag move has been made
     function onDrop(source, target, piece, newPos, oldPos, orientation) {
+      console.log("OnDrop was Called!")
+      hideLegalMoves(source, piece, oldPos, orientation);
 
+      let legalSpaces = getLegalMoves(source, piece, oldPos, orientation);
+      let wasLegal: boolean;
+      wasLegal = false;
+
+      for(let key in legalSpaces){
+        if(target === legalSpaces[key]){
+          wasLegal = true;
+        }
+      }
+
+      if(!wasLegal){
+        return 'snapback'
+      }else{
+        console.log(oldPos)
+        console.log(newPos)
+        if(wasPieceTaken(oldPos, newPos)){
+          console.log("Made it to wasPieceTaken")
+          console.log(promote(oldPos, newPos, target, piece))
+          
+          board.position(promote(oldPos, newPos, target, piece), true)
+          return 'trash'
+        }
+      }
     }
 
     // Activates whenever animation has occurred (AI has made move)
@@ -1023,16 +1045,6 @@ export class BoardComponent implements OnInit {
     //Activates whenever mouse enters square
     function onMouseoverSquare(square, piece, boardPos, orientation){
       if (piece) {
-        console.log("Mouseover() was called!");
-        console.log("square:");
-        console.log(square);
-        console.log("piece:");
-        console.log(piece);
-        console.log("boardPos:");
-        console.log(boardPos);
-        console.log("orientation:");
-        console.log(orientation);
-
         console.log("\n");
         console.log("TEST getLegalMoves()");
         showLegalMoves(square, piece, boardPos, orientation);
@@ -1049,11 +1061,12 @@ export class BoardComponent implements OnInit {
 
 
   }
+
   showPosition() {
     let p = 'c2';
-    let pos = this.board.position();
-      console.log(Object.entries(this.board.position()).length)
-      for(let [key, value] of Object.entries(this.board.position())){
+    let pos = this.startBoard.position();
+      console.log(Object.entries(this.startBoard.position()).length)
+      for(let [key, value] of Object.entries(this.startBoard.position())){
         if(key === p){
           console.log(key + ": " + value)
         }
