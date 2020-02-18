@@ -921,7 +921,7 @@ export class BoardComponent implements OnInit {
 
         //Still need to compare attacking and taken pieces in order to determine what rank to promote to
         if(promotingPiece == "wP" || promotingPiece == "bP"){
-          if(enemyPiece == "wK" || enemyPiece == "bK"){
+          if(enemyPiece == "wN" || enemyPiece == "bN"){
             for(let key in newBoardObj){
               if(key === newPos){
                 if(promotingPiece == "wP"){
@@ -935,9 +935,9 @@ export class BoardComponent implements OnInit {
             for(let key in newBoardObj){
               if(key === newPos){
                 if(promotingPiece == "wP"){
-                  newBoardObj[key] = "wK";
+                  newBoardObj[key] = "wN";
                 }else {
-                  newBoardObj[key] = "bK";
+                  newBoardObj[key] = "bN";
                 }
               }
             }
@@ -957,9 +957,9 @@ export class BoardComponent implements OnInit {
               for(let key in newBoardObj){
                 if(key === newPos){
                   if(promotingPiece == "wR"){
-                    newBoardObj[key] = "wK";
+                    newBoardObj[key] = "wN";
                   }else {
-                    newBoardObj[key] = "bK";
+                    newBoardObj[key] = "bN";
                   }
                 }
               }
@@ -989,7 +989,7 @@ export class BoardComponent implements OnInit {
               if(key == newPos){
                 if(promotingPiece == "wN"){
                   newBoardObj[key] = "wQ"
-                }else {
+                }else if(promotingPiece == "bN"){
                   newBoardObj[key] = "bQ"
                 }
               }
