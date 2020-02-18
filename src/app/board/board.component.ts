@@ -528,6 +528,52 @@ export class BoardComponent implements OnInit {
 
             // Knight
           case "N":
+            searchRowIndex = row;
+            searchColIndex = col;
+
+            // Look vertically left and right (Long up/down, Short left/right)
+            for (let i: number = 2; i >= -2; i -= 4) {
+              if (0 <= searchRowIndex + i && searchRowIndex + i <= 7) {
+                for (let j: number = 1; j >= -1; j -= 2) {
+                  if (0 <= searchColIndex + j && searchColIndex + j <= 7) {
+                    let searchSquare : string = allSquares[searchRowIndex + i][searchColIndex + j];
+                    // If another piece exists in square
+                    if (searchSquare in boardPos) {
+                      let bogeyPiece : string = boardPos[searchSquare];
+                      let bogeyColor : string = bogeyPiece[0];
+                      if (pieceColor != bogeyColor) {
+                        moves.push(searchSquare);
+                      }
+                    }
+                    // No piece detected, add square to list of legal moves
+                    else {
+                      moves.push(searchSquare);
+                    }
+                  }
+                }
+              }
+            }
+
+            // Look horizontally up and down (Long left/right, Short up/down)
+            for (let i: number = 1; i >= -1; i -= 2) {
+              if (0 <= searchRowIndex + i && searchRowIndex + i <= 7) {
+                for (let j: number = 2; j >= -2; j -= 4) {
+                  if (0 <= searchColIndex + j && searchColIndex + j <= 7) {
+                    let searchSquare : string = allSquares[searchRowIndex + i][searchColIndex + j];
+                    if (searchSquare in boardPos) {
+                      let bogeyPiece : string = boardPos[searchSquare];
+                      let bogeyColor : string = bogeyPiece[0];
+                      if (pieceColor != bogeyColor) {
+                        moves.push(searchSquare);
+                      }
+                    }
+                    else {
+                      moves.push(searchSquare);
+                    }
+                  }
+                }
+              }
+            }
             break;
 
             // Queen
@@ -950,7 +996,7 @@ export class BoardComponent implements OnInit {
             }
         }
 
-        //returns the newly changed Board Object as a FEN String, 
+        //returns the newly changed Board Object as a FEN String,
         //if No change was made then FEN will be returned unchanged
         return newBoardObj
     }
