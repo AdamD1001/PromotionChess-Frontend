@@ -16,7 +16,7 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void{
     this.board = ChessBoard('board1', {
-      position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPNP/PPPPKPPP',
+      position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
       draggable: true,
       onChange: onChange,
       onDrop: onDrop,
