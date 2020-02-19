@@ -118,6 +118,9 @@ export class BoardComponent implements OnInit {
                     moves.push(searchSquare1);
                   }
                 }
+                else {
+                  moves.push(searchSquare1);
+                }
               }
               if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
                 let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
@@ -127,6 +130,9 @@ export class BoardComponent implements OnInit {
                   if (pieceColor != bogeyColor) {
                     moves.push(searchSquare2);
                   }
+                }
+                else {
+                  moves.push(searchSquare2);
                 }
               }
             }
@@ -244,6 +250,9 @@ export class BoardComponent implements OnInit {
                     moves.push(searchSquare1);
                   }
                 }
+                else {
+                  moves.push(searchSquare1);
+                }
               }
               if (0 <= (searchColIndex + 1) && (searchColIndex + 1) <= 7) {
                 let searchSquare2 : string = allSquares[searchRowIndex][searchColIndex + 1];
@@ -253,6 +262,9 @@ export class BoardComponent implements OnInit {
                   if (pieceColor != bogeyColor) {
                     moves.push(searchSquare2);
                   }
+                }
+                else {
+                  moves.push(searchSquare2);
                 }
               }
             }
@@ -916,7 +928,7 @@ export class BoardComponent implements OnInit {
               enemyPiece = oldBoardObj[key]
             }
           //Finds and stores current player piece type
-          
+
         }
 
         //Still need to compare attacking and taken pieces in order to determine what rank to promote to
@@ -1004,8 +1016,8 @@ export class BoardComponent implements OnInit {
     // Returns true if a piece was taken between 2 board states
     // Return Type: boolean
     function wasPieceTaken(oldBoardObj, newBoardObj) {
-      console.log(Object.entries(oldBoardObj).length)
-      console.log(Object.entries(newBoardObj).length)
+      console.log(Object.entries(oldBoardObj).length);
+      console.log(Object.entries(newBoardObj).length);
         if(Object.entries(oldBoardObj).length > Object.entries(newBoardObj).length){
           return true
         } else {
@@ -1055,7 +1067,7 @@ export class BoardComponent implements OnInit {
 
     // Activates whenever player-drag move has been made
     function onDrop(source, target, piece, newPos, oldPos, orientation) {
-      console.log("OnDrop was Called!")
+      console.log("OnDrop was Called!");
       hideLegalMoves(source, piece, oldPos, orientation);
 
       let legalSpaces = getLegalMoves(source, piece, oldPos, orientation);
@@ -1071,13 +1083,13 @@ export class BoardComponent implements OnInit {
       if(!wasLegal){
         return 'snapback'
       }else{
-        console.log(oldPos)
-        console.log(newPos)
+        console.log(oldPos);
+        console.log(newPos);
         if(wasPieceTaken(oldPos, newPos)){
-          console.log("Made it to wasPieceTaken")
-          console.log(promote(oldPos, newPos, target, piece))
-          
-          board.position(promote(oldPos, newPos, target, piece), true)
+          console.log("Made it to wasPieceTaken");
+          console.log(promote(oldPos, newPos, target, piece));
+
+          board.position(promote(oldPos, newPos, target, piece), true);
           return 'trash'
         }
       }
