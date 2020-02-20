@@ -908,7 +908,6 @@ export class BoardComponent implements OnInit {
     function promote(oldBoardObj, newBoardObj, newPos, piece) {
       let enemyPiece: any;
       let promotingPiece = piece;
-      let newPromotion: any;
 
       //Finds and stores enemy piece type
           for(let key in oldBoardObj){
@@ -1055,7 +1054,6 @@ export class BoardComponent implements OnInit {
 
     // Activates whenever player-drag move has been made
     function onDrop(source, target, piece, newPos, oldPos, orientation) {
-      console.log("OnDrop was Called!")
       hideLegalMoves(source, piece, oldPos, orientation);
 
       let legalSpaces = getLegalMoves(source, piece, oldPos, orientation);
@@ -1071,13 +1069,8 @@ export class BoardComponent implements OnInit {
       if(!wasLegal){
         return 'snapback'
       }else{
-        console.log(oldPos)
-        console.log(newPos)
         if(wasPieceTaken(oldPos, newPos)){
-          console.log("Made it to wasPieceTaken")
-          console.log(promote(oldPos, newPos, target, piece))
-          
-          board.position(promote(oldPos, newPos, target, piece), true)
+          board.position(promote(oldPos, newPos, target, piece), false)
           return 'trash'
         }
       }
