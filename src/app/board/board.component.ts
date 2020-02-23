@@ -16,7 +16,7 @@ export class BoardComponent implements OnInit {
 
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
-}
+};
 
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
@@ -70,8 +70,8 @@ export class BoardComponent implements OnInit {
       pieceColor = piece.toString()[0];
 
       // If piece is Pawn
-      // TODO: Need clarification on exactly how pawn ATTACK moves work
-      // Can it attack in any 1 distance range (including forward, sideways, back-diagonal, and reverse)
+      // Can attack in any 1 distance range
+      // Can move freely sideways, forward, and forward-diagonal
       if (pieceType == "P") {
         let searchRowIndex : number = row;
         let searchColIndex : number = col;
@@ -917,15 +917,46 @@ export class BoardComponent implements OnInit {
 
     // Returns board with promoted chess piece
     // Return Type: Fen String
-    function promote(oldBoardObj, newBoardObj, newPos, piece) {
+    function promote(oldBoardObj, newBoardObj, newPos, piece, orientation) {
       let enemyPiece: any;
       let promotingPiece = piece;
 
-      //Finds and stores enemy piece type
-          for(let key in oldBoardObj){
-            if(key === newPos){
-              enemyPiece = oldBoardObj[key]
+      // If piece was not taken and piece is a pawn that has reach enemy row, promote to queen
+      if (!(wasPieceTaken(oldBoardObj, newBoardObj))) {
+        if (orientation == "white") {
+          if (promotingPiece == "wP") {
+            // If white pawn has reach enemy row
+            if (newPos[1] == "8") {
+              // Promotes pawn to queen and returns fen string
+              newBoardObj[newPos] = "wQ";
+              return newBoardObj;
             }
+            else {
+              return newBoardObj;
+            }
+          }
+          else if (promotingPiece == "bP") {
+            // If black pawn has reach enemy row
+            if (newPos[1] == "1") {
+              // Promotes pawn to queen and returns fen string
+              newBoardObj[newPos] = "bQ";
+              return newBoardObj;
+            }
+            else {
+              return newBoardObj;
+            }
+          }
+          else {
+            return newBoardObj;
+          }
+        }
+      }
+      else {
+        //Finds and stores enemy piece type
+        for(let key in oldBoardObj){
+          if(key === newPos){
+            enemyPiece = oldBoardObj[key]
+          }
           //Finds and stores current player piece type
 
         }
@@ -964,27 +995,27 @@ export class BoardComponent implements OnInit {
             }
           }
         }else if(promotingPiece == "wR" || promotingPiece == "bR"){
-            if(enemyPiece == "wQ" || enemyPiece == "bQ"){
-              for(let key in newBoardObj){
-                if(key === newPos){
-                  if(promotingPiece == "wR"){
-                    newBoardObj[key] = "wN";
-                  }else {
-                    newBoardObj[key] = "bN";
-                  }
-                }
-              }
-            }else {
-              for(let key in newBoardObj){
-                if(key === newPos){
-                  if(promotingPiece == "wR"){
-                    newBoardObj[key] = "wB";
-                  }else {
-                    newBoardObj[key] = "bB";
-                  }
+          if(enemyPiece == "wQ" || enemyPiece == "bQ"){
+            for(let key in newBoardObj){
+              if(key === newPos){
+                if(promotingPiece == "wR"){
+                  newBoardObj[key] = "wN";
+                }else {
+                  newBoardObj[key] = "bN";
                 }
               }
             }
+          }else {
+            for(let key in newBoardObj){
+              if(key === newPos){
+                if(promotingPiece == "wR"){
+                  newBoardObj[key] = "wB";
+                }else {
+                  newBoardObj[key] = "bB";
+                }
+              }
+            }
+          }
         }else if(promotingPiece == "wB" || promotingPiece == "bB"){
           for(let key in newBoardObj){
             if(key === newPos){
@@ -996,33 +1027,31 @@ export class BoardComponent implements OnInit {
             }
           }
         }else{
-            for(let key in newBoardObj){
-              if(key == newPos){
-                if(promotingPiece == "wN"){
-                  newBoardObj[key] = "wQ"
-                }else if(promotingPiece == "bN"){
-                  newBoardObj[key] = "bQ"
-                }
+          for(let key in newBoardObj){
+            if(key == newPos){
+              if(promotingPiece == "wN"){
+                newBoardObj[key] = "wQ"
+              }else if(promotingPiece == "bN"){
+                newBoardObj[key] = "bQ"
               }
             }
+          }
         }
 
         //returns the newly changed Board Object as a FEN String,
         //if No change was made then FEN will be returned unchanged
         return newBoardObj
+      }
     }
 
     // Returns true if a piece was taken between 2 board states
     // Return Type: boolean
     function wasPieceTaken(oldBoardObj, newBoardObj) {
-      console.log(Object.entries(oldBoardObj).length);
-      console.log(Object.entries(newBoardObj).length);
         if(Object.entries(oldBoardObj).length > Object.entries(newBoardObj).length){
           return true
         } else {
           return false
         }
-
     }
 
     // Outlines all legal moves for given pos
@@ -1056,7 +1085,6 @@ export class BoardComponent implements OnInit {
     // Return Type: void
     function hideLegalMoves(square, piece, boardPos, orientation) {
       let overlayElements : HTMLCollection = document.getElementsByClassName("legal-overlay");
-      console.log(overlayElements);
       // While there is a first element in overlayElements
       while (overlayElements[0]) {
         let overlaySq : Element = overlayElements[0];
@@ -1079,11 +1107,17 @@ export class BoardComponent implements OnInit {
       }
 
       if(!wasLegal){
-        return 'snapback'
+        return 'snapback';
       }else{
         if(wasPieceTaken(oldPos, newPos)){
-          board.position(promote(oldPos, newPos, target, piece), false)
-          return 'trash'
+          board.position(promote(oldPos, newPos, target, piece, orientation), false);
+          return 'trash';
+        }
+        else {
+          if (piece == "wP" || piece == "bP") {
+            board.position(promote(oldPos, newPos, target, piece, orientation), false);
+            return 'trash';
+          }
         }
       }
     }
@@ -1096,10 +1130,7 @@ export class BoardComponent implements OnInit {
     //Activates whenever mouse enters square
     function onMouseoverSquare(square, piece, boardPos, orientation){
       if (piece) {
-        console.log("\n");
-        console.log("TEST getLegalMoves()");
         showLegalMoves(square, piece, boardPos, orientation);
-        console.log(getLegalMoves(square, piece, boardPos, orientation));
       }
     }
 
@@ -1109,8 +1140,6 @@ export class BoardComponent implements OnInit {
         hideLegalMoves(square, piece, boardPos, orientation);
       }
     }
-
-
   }
 
   showPosition() {
