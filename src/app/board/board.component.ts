@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PromotionService } from '../promotion.service';
 
 declare var ChessBoard: any;
 @Component({
@@ -10,10 +11,10 @@ declare var ChessBoard: any;
 export class BoardComponent implements OnInit {
   title = 'PromoChessFrontend';
 
-  constructor(){}
+  constructor(private promotionService: PromotionService){}
 
   startBoard: any;
-
+  counter: number = 0;
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
 };
@@ -30,7 +31,8 @@ export class BoardComponent implements OnInit {
     });
 
     let board = this.startBoard;
-
+    let numOfMoves = this.counter;
+    let service = this.promotionService;
     // Sends board changes to move-list component
     function onChange (oldPos, newPos) {
     }
@@ -1109,6 +1111,8 @@ export class BoardComponent implements OnInit {
       if(!wasLegal){
         return 'snapback';
       }else{
+        numOfMoves += 1;
+        service.addMoveToList(numOfMoves, piece, source, target, newPos);
         if(wasPieceTaken(oldPos, newPos)){
           board.position(promote(oldPos, newPos, target, piece, orientation), false);
           return 'trash';
@@ -1142,20 +1146,6 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  showPosition() {
-    let p = 'c2';
-    let pos = this.startBoard.position();
-      console.log(Object.entries(this.startBoard.position()).length)
-      for(let [key, value] of Object.entries(this.startBoard.position())){
-        if(key === p){
-          console.log(key + ": " + value)
-        }
-      }
-      for(let key in pos) {
-        if(key == p){
-          pos[key] = "wQ"
-          console.log(ChessBoard.objToFen(pos))
-        }
-      }
+  serviceCheck() {
     }
 }

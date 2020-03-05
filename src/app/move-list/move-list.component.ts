@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PromotionService } from '../promotion.service';
 
 @Component({
   selector: 'app-move-list',
@@ -7,17 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MoveListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private promotionService: PromotionService) { }
 
+  moveList;
   ngOnInit() {
+
+    this.moveList = this.promotionService.getMoveList().reverse();
+
   }
 
-  list: any[] = [
-    {"move" : "Pawn: a2 to a3"},
-    {"move" : "Pawn: a2 to a3"},
-    {"move" : "Pawn: a2 to a3"},
-    {"move" : "Pawn: a2 to a3"},
-    {"move" : "Pawn: a2 to a3"}
-  ];
 
 }
