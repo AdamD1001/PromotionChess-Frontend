@@ -1026,6 +1026,25 @@ export class BoardComponent implements OnInit {
     }
 
 
+    // Returns whether or not specified color team is in checkmate or not
+    // Return Type: boolean
+    function isCheckmate(colorChar, boardObj, orientation) {
+      for (let i : number = 0; i < Object.keys(boardObj).length; i++) {
+        let gridKey : string = Object.keys(boardObj)[i]; // Square Position
+        let piece : string = boardObj[gridKey];
+        let pieceColor : string = piece[0];
+
+        if (pieceColor === colorChar) {
+          let moveCount : number = getLegalMoves(gridKey, piece, boardObj, orientation).length;
+          if (moveCount > 0) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+
     // Returns board with promoted chess piece
     // Return Type: Fen String
     function promote(oldBoardObj, newBoardObj, newPos, piece, orientation) {
@@ -1244,6 +1263,7 @@ export class BoardComponent implements OnInit {
     function onMouseoverSquare(square, piece, boardPos, orientation){
       if (piece) {
         showLegalMoves(square, piece, boardPos, orientation);
+        // console.log(isCheckmate(piece[0], boardPos, orientation));
       }
     }
 
