@@ -782,7 +782,6 @@ export class BoardComponent implements OnInit {
             break;
 
             // King
-            // TODO: isCheckmate function is needed to determine king moves
           case "K":
             // Look Up
             searchRowIndex = row - 1;
@@ -956,9 +955,34 @@ export class BoardComponent implements OnInit {
       //pieceColor will return lowercase char ('w' or 'b')
       pieceColor = piece.toString()[0];
 
-      //TODO: If in check, need to modify moves[] to eliminate moves that would still leave team in check
       if (isCheck(pieceColor, boardPos, orientation)) {
-        console.log("IN CHECK");
+        let newMoves : string[] = moves.slice();
+        for (let i : number = 0; i < moves.length; i++) {
+          let testBoardPos : object = {};
+          testBoardPos = Object.assign(testBoardPos, boardPos);
+          let currentMove : string = moves[i];
+
+          // Simulate the move on the testBoardPos Object
+          // Piece leaves its origin
+          delete testBoardPos[square];
+          // If piece is attacking, move and promote
+          if (Object.keys(testBoardPos).includes(currentMove)) {
+            testBoardPos[currentMove] = piece;
+            testBoardPos = promote(boardPos, testBoardPos, currentMove, piece, orientation);
+          }
+          else {
+            testBoardPos[currentMove] = piece;
+          }
+          // Determine if simulated move is still in check or not
+          if (isCheck(pieceColor, testBoardPos, orientation)) {
+            // Move is in check and therefore illegal
+            delete newMoves[i];
+          }
+        }
+        // Remove empty elements, caused by deletion
+        newMoves = newMoves.filter(el => el != null);
+        // Set moves to newMoves
+        moves = newMoves;
       }
       return moves;
     }
@@ -980,7 +1004,6 @@ export class BoardComponent implements OnInit {
       }
 
       let moves : string[] = getPreLegalMoves(square, piece, boardObj, orientation);
-      console.log(moves);
       return moves.includes(enemyKingSquare);
     }
 
