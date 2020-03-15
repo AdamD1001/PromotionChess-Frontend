@@ -1146,6 +1146,9 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  serviceCheck() {
+  testButton() {
+      console.log(ChessBoard.objToFen(this.startBoard.position()));
+      this.startBoard.flip();
+      console.log(ChessBoard.objToFen(this.startBoard.position()));
     }
 }
