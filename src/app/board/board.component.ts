@@ -15,6 +15,7 @@ export class BoardComponent implements OnInit {
 
   startBoard: any;
   counter: number = 0;
+  difficultyDepth: number = 4;
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
 };
@@ -33,6 +34,7 @@ export class BoardComponent implements OnInit {
     let board = this.startBoard;
     let numOfMoves = this.counter;
     let service = this.promotionService;
+    let depth = this.difficultyDepth;
 
 
     // Sends board changes to move-list component
@@ -1243,14 +1245,26 @@ export class BoardComponent implements OnInit {
         service.addMoveToList(numOfMoves, piece, source, target, newPos);
         if(wasPieceTaken(oldPos, newPos)){
           board.position(promote(oldPos, newPos, target, piece, orientation), false);
-          return 'trash';
         }
         else {
           if (piece == "wP" || piece == "bP") {
             board.position(promote(oldPos, newPos, target, piece, orientation), false);
-            return 'trash';
           }
         }
+        setTimeout(function () {
+          let restPackage : object = {
+            "fenString": board.fen(),
+            "aiColor": piece[0],
+            "depth": depth,
+            "orientation": orientation
+          };
+
+          let aiBoardFen : any;
+          service.getAIMove(restPackage).subscribe(data => {});
+          console.log(aiBoardFen);
+          board.position(ChessBoard.fenToObj(aiBoardFen), true);
+        }, 5000);
+        return 'trash';
       }
     }
 
