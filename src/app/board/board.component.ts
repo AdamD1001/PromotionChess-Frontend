@@ -33,13 +33,16 @@ export class BoardComponent implements OnInit {
     let board = this.startBoard;
     let numOfMoves = this.counter;
     let service = this.promotionService;
+
+
     // Sends board changes to move-list component
     function onChange (oldPos, newPos) {
     }
 
-    // Returns an array of all valid position objects for the given piece
+
+    // Returns an array of all valid position objects for the given piece BEFORE checking for "Check" status
     // Return Type: ArrayList[]
-    function getLegalMoves(square, piece, boardPos, orientation) {
+    function getPreLegalMoves(square, piece, boardPos, orientation) {
       let pieceType : string;
       let pieceColor : string;
       // Represents indexes of allSquares array that corresponds with the given square
@@ -779,7 +782,6 @@ export class BoardComponent implements OnInit {
             break;
 
             // King
-            // TODO: isCheckmate function is needed to determine king moves
           case "K":
             // Look Up
             searchRowIndex = row - 1;
@@ -910,12 +912,138 @@ export class BoardComponent implements OnInit {
             }
             break;
           default:
-            console.log("Error in getLegalMoves()! Piece type invalid!");
+            console.log("Error in getPreLegalMoves()! Piece type invalid!");
             break;
         }
       }
+
       return moves;
     }
+
+
+    // Returns an array of all valid position objects for the given piece AFTER checking for "Check" status
+    // Return Type: ArrayList[]
+    function getLegalMoves(square, piece, boardPos, orientation) {
+      let moves : string[] = getPreLegalMoves(square, piece, boardPos, orientation);
+      let pieceType : string;
+      let pieceColor : string;
+      // Represents indexes of allSquares array that corresponds with the given square
+      let row : number;
+      let col : number;
+      let allSquares : Array<string[]>;
+
+      // 2D Array of all square combinations
+      allSquares = [["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"],
+        ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"],
+        ["a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6"],
+        ["a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5"],
+        ["a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4"],
+        ["a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3"],
+        ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
+        ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]];
+
+      // Assign row and col values
+      for (let i: number = 0; i < allSquares.length; i++) {
+        if (allSquares[i].includes(square)) {
+          row = i;
+          col = allSquares[i].indexOf(square)
+        }
+      }
+
+      //pieceType will return uppercase symbol
+      pieceType = piece.toString()[1];
+      //pieceColor will return lowercase char ('w' or 'b')
+      pieceColor = piece.toString()[0];
+
+      if (isCheck(pieceColor, boardPos, orientation)) {
+        let newMoves : string[] = moves.slice();
+        for (let i : number = 0; i < moves.length; i++) {
+          let testBoardPos : object = {};
+          testBoardPos = Object.assign(testBoardPos, boardPos);
+          let currentMove : string = moves[i];
+
+          // Simulate the move on the testBoardPos Object
+          // Piece leaves its origin
+          delete testBoardPos[square];
+          // If piece is attacking, move and promote
+          if (Object.keys(testBoardPos).includes(currentMove)) {
+            testBoardPos[currentMove] = piece;
+            testBoardPos = promote(boardPos, testBoardPos, currentMove, piece, orientation);
+          }
+          else {
+            testBoardPos[currentMove] = piece;
+          }
+          // Determine if simulated move is still in check or not
+          if (isCheck(pieceColor, testBoardPos, orientation)) {
+            // Move is in check and therefore illegal
+            delete newMoves[i];
+          }
+        }
+        // Remove empty elements, caused by deletion
+        newMoves = newMoves.filter(el => el != null);
+        // Set moves to newMoves
+        moves = newMoves;
+      }
+      return moves;
+    }
+
+
+    // Returns whether or not piece at specified square can attack opposing king
+    // Return Type: boolean
+    function canPieceTakeKing(square, boardObj, orientation) {
+      let piece : string = boardObj[square];
+      let pieceColor : string = piece[0].toString();
+
+      // Assigns square position of enemy king
+      let enemyKingSquare : string;
+      if (pieceColor === "w") {
+        enemyKingSquare = Object.keys(boardObj).find(key => boardObj[key] === "bK");
+      }
+      if (pieceColor === "b") {
+        enemyKingSquare = Object.keys(boardObj).find(key => boardObj[key] === "wK");
+      }
+
+      let moves : string[] = getPreLegalMoves(square, piece, boardObj, orientation);
+      return moves.includes(enemyKingSquare);
+    }
+
+
+    // Returns whether or not specified color team is in check or not
+    // Return Type: boolean
+    function isCheck(colorChar, boardObj, orientation) {
+      for (let i : number = 0; i < Object.keys(boardObj).length; i++) {
+        let gridKey : string = Object.keys(boardObj)[i]; // Square Position
+        let piece : string = boardObj[gridKey];
+        let pieceColor : string = piece[0];
+
+        if (pieceColor != colorChar) {
+          if (canPieceTakeKing(gridKey, boardObj, orientation)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+
+    // Returns whether or not specified color team is in checkmate or not
+    // Return Type: boolean
+    function isCheckmate(colorChar, boardObj, orientation) {
+      for (let i : number = 0; i < Object.keys(boardObj).length; i++) {
+        let gridKey : string = Object.keys(boardObj)[i]; // Square Position
+        let piece : string = boardObj[gridKey];
+        let pieceColor : string = piece[0];
+
+        if (pieceColor === colorChar) {
+          let moveCount : number = getLegalMoves(gridKey, piece, boardObj, orientation).length;
+          if (moveCount > 0) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
 
     // Returns board with promoted chess piece
     // Return Type: Fen String
@@ -1135,6 +1263,7 @@ export class BoardComponent implements OnInit {
     function onMouseoverSquare(square, piece, boardPos, orientation){
       if (piece) {
         showLegalMoves(square, piece, boardPos, orientation);
+        // console.log(isCheckmate(piece[0], boardPos, orientation));
       }
     }
 
