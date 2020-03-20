@@ -15,6 +15,8 @@ export class BoardComponent implements OnInit {
 
   startBoard: any;
   counter: number = 0;
+  newFenString: any;
+  moveListLength: any;
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
 };
@@ -1275,9 +1277,16 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  testButton() {
-      console.log(ChessBoard.objToFen(this.startBoard.position()));
-      this.startBoard.flip();
-      console.log(ChessBoard.objToFen(this.startBoard.position()));
+  //Resets the Board state back to the board state of the user's previous move
+  undo() {
+    
+    this.moveListLength = this.promotionService.getMoveList().length - 1;
+    if(this.moveListLength < 3){
+      this.newFenString = 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP';
+    }else {
+      this.newFenString = this.promotionService.getMoveList()[this.moveListLength - 2].fen;
     }
+    
+    this.startBoard.position(this.newFenString, true)
+  }
 }

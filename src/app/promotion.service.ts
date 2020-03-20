@@ -7,6 +7,7 @@ export class PromotionService {
 
   private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String}> = [];
 
+  fenString: any = 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP';
   constructor() { }
 
   addMoveToList(index, chosenPiece, src, tar, newFen) {
