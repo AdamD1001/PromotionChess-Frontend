@@ -1,0 +1,16 @@
+<form [formGroup]="form" (ngSubmit)="submit()" style="text-align: center;">
+    <label for="difficulty">A.I Difficulty</label>
+    <br>
+    <select formControlName="difficulty" id="mode">
+      <option *ngFor="let mode of difficulty; let i = index" [value]="difficulty[i].level">
+        {{difficulty[i].name}}
+      </option>
+    </select>
+    
+    <br><br>
+    <h5>Choose your starting color:</h5>
+    <br>
+    <button (click)="isWhite()" [routerLink]="'/playervs-ai'" >White</button>
+    <button (click)="isBlack()" [routerLink]="'/playervs-ai'" >Black</button>
+  </form>
+  

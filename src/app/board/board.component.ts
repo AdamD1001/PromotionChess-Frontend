@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { PromotionService } from '../promotion.service';
 import {tap} from "rxjs/operators";
 import {Observable, Subscribable} from "rxjs";
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { RulesPageComponent } from '../rules-page/rules-page.component';
 
 declare var ChessBoard: any;
 @Component({
@@ -13,7 +15,7 @@ declare var ChessBoard: any;
 export class BoardComponent implements OnInit {
   title = 'PromoChessFrontend';
 
-  constructor(private promotionService: PromotionService){}
+  constructor(private promotionService: PromotionService, public matDialog: MatDialog){}
 
   startBoard: any;
   counter: number = 0;
@@ -23,6 +25,16 @@ export class BoardComponent implements OnInit {
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
   };
+
+  openModal() {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+  }
 
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
@@ -1268,7 +1280,8 @@ export class BoardComponent implements OnInit {
         let aiBoardFen : any;
 
         // Makes POST request to get AI's best move and record to aiBoardFen
-        let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
+       /* This part is commented because without the JBOSS server it gives a lot of errors and breaks everything
+       let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
 
         // Wait 2 seconds
         setTimeout(function () {
@@ -1278,6 +1291,7 @@ export class BoardComponent implements OnInit {
           // Stop subscription stream
           postRequest.unsubscribe();
         }, 2000);
+        */
         return 'trash';
       }
     }
@@ -1312,6 +1326,7 @@ export class BoardComponent implements OnInit {
     }else {
       this.newFenString = this.promotionService.getMoveList()[this.moveListLength - 2].fen;
     }
+    this.promotionService.undoMovesFromList();
     
     this.startBoard.position(this.newFenString, true)
   }

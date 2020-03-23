@@ -1,0 +1,6 @@
+<div style="text-align: center; display: flex; flex-wrap: wrap;">
+    <h1 style="flex: 100%">Welcome to Promotion Chess!</h1>
+    <button style="flex: 35%; padding-left: 15%" (click)="onHomePage = false" [hidden]="!onHomePage" [routerLink]="'/ai-vs-ai'">A.I Versus A.I</button>
+    <button style="flex: 35%; padding-right: 15%" (click)="onHomePage = false" [hidden]="!onHomePage"  [routerLink]="'/player-options'">Player Versus A.I</button>
+
+</div>
