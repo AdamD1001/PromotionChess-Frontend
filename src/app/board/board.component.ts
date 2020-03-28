@@ -1086,32 +1086,16 @@ export class BoardComponent implements OnInit {
 
       // If piece was not taken and piece is a pawn that has reach enemy row, promote to queen
       if (!(wasPieceTaken(oldBoardObj, newBoardObj))) {
-        if (orientation == "white") {
-          if (promotingPiece == "wP") {
-            // If white pawn has reach enemy row
-            if (newPos[1] == "8") {
-              // Promotes pawn to queen and returns fen string
-              newBoardObj[newPos] = "wQ";
-              return newBoardObj;
-            }
-            else {
-              return newBoardObj;
-            }
-          }
-          else if (promotingPiece == "bP") {
-            // If black pawn has reach enemy row
-            if (newPos[1] == "1") {
-              // Promotes pawn to queen and returns fen string
-              newBoardObj[newPos] = "bQ";
-              return newBoardObj;
-            }
-            else {
-              return newBoardObj;
-            }
-          }
-          else {
-            return newBoardObj;
-          }
+        if (promotingPiece == "wP") {
+          newBoardObj[newPos] = "wQ";
+          return newBoardObj;
+        }
+        else if (promotingPiece == "bP") {
+          newBoardObj[newPos] = "bQ";
+          return newBoardObj;
+        }
+        else {
+          return newBoardObj;
         }
       }
       else {
@@ -1290,8 +1274,43 @@ export class BoardComponent implements OnInit {
         }
         else {
           if (piece == "wP" || piece == "bP") {
-            board.position(promote(oldPos, newPos, target, piece, orientation), false);
-            wasPromoted = true;
+            let promotingPiece : string = piece;
+            if (orientation == "white") {
+              if (promotingPiece == "wP") {
+                // If white pawn has reach enemy row
+                if (target[1] == "8") {
+                  // Promotes pawn to queen and returns fen string
+                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  wasPromoted = true;
+                }
+              }
+              if (promotingPiece == "bP") {
+                // If black pawn has reach enemy row
+                if (target[1] == "1") {
+                  // Promotes pawn to queen and returns fen string
+                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  wasPromoted = true;
+                }
+              }
+            }
+            else if (orientation == "black") {
+              if (promotingPiece == "wP") {
+                // If white pawn has reach enemy row
+                if (target[1] == "1") {
+                  // Promotes pawn to queen and returns fen string
+                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  wasPromoted = true;
+                }
+              }
+              if (promotingPiece == "bP") {
+                // If black pawn has reach enemy row
+                if (target[1] == "8") {
+                  // Promotes pawn to queen and returns fen string
+                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  wasPromoted = true;
+                }
+              }
+            }
           }
         }
 
@@ -1305,7 +1324,12 @@ export class BoardComponent implements OnInit {
 
           // End of game has been reached
           // Will return without setting isPlayersTurn to true, therefore ending control of board
-          return "trash";
+          if (wasPromoted) {
+            return "trash";
+          }
+          else {
+            return "drop";
+          }
         }
 
         // POST - Request JSON
@@ -1324,8 +1348,12 @@ export class BoardComponent implements OnInit {
         const devMode : boolean = true; // TODO: Temporary
         if (devMode) {
           isPlayersTurn = true;
-          console.log(board.fen());
-          return "trash"
+          if (wasPromoted) {
+            return "trash";
+          }
+          else {
+            return "drop";
+          }
         }
 
         // Makes POST request to get AI's best move and record to aiBoardFen
