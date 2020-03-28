@@ -40,11 +40,13 @@ export class PlayerOptionsComponent implements OnInit {
   ngOnInit() {
     this.isWhite = () => {
       this.promotionService.setPlayerOrientation("white");
-    }
+      this.promotionService.setDepthOfDifficulty(this.form.value["difficulty"]);
+    };
 
     this.isBlack = () => {
       this.promotionService.setPlayerOrientation("black");
-    }
+      this.promotionService.setDepthOfDifficulty(this.form.value["difficulty"]);
+    };
   }
 
 }

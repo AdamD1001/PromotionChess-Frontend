@@ -21,9 +21,10 @@ export class BoardComponent implements OnInit {
   counter: number = 0;
   newFenString: any;
   moveListLength: any;
-  difficultyDepth: number = 1; // TODO: Values should be fed from player options
-  playerColor: string = "w";
+  difficultyDepth: number = this.promotionService.getDepthOfDifficulty();
+  playerColor: string = this.promotionService.getPlayerOrientation() == "white" ? "w" : "b";
   isPlayersTurn: boolean = this.playerColor == "w";
+  orientation: string = this.promotionService.getPlayerOrientation();
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
   };
@@ -42,6 +43,7 @@ export class BoardComponent implements OnInit {
     this.startBoard = ChessBoard('board1', {
       position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
       draggable: true,
+      orientation: this.orientation,
       onChange: onChange,
       onDragStart: onDragStart,
       onDrop: onDrop,
