@@ -21,7 +21,9 @@ export class BoardComponent implements OnInit {
   counter: number = 0;
   newFenString: any;
   moveListLength: any;
-  difficultyDepth: number = 4;
+  difficultyDepth: number = 1; // TODO: Values should be fed from player options
+  playerColor: string = "w";
+  isPlayersTurn: boolean = this.playerColor == "w";
   changeBoard: Function = (boardObj) => {
     this.startBoard.position(boardObj, true)
   };
@@ -41,6 +43,7 @@ export class BoardComponent implements OnInit {
       position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
       draggable: true,
       onChange: onChange,
+      onDragStart: onDragStart,
       onDrop: onDrop,
       onMoveEnd: onMoveEnd,
       onMouseoverSquare: onMouseoverSquare,
@@ -51,10 +54,22 @@ export class BoardComponent implements OnInit {
     let numOfMoves = this.counter;
     let service = this.promotionService;
     let depth = this.difficultyDepth;
+    let playerColor = this.playerColor;
+    let isPlayersTurn = this.isPlayersTurn;
 
 
     // Sends board changes to move-list component
     function onChange (oldPos, newPos) {
+    }
+
+
+    // Activates when piece drag begins
+    // If returns false then drag is prevented
+    function onDragStart (sourceSquare, piece, boardPosObj, orientation) {
+      let targetColor : string = piece[0];
+      // If it is the player's turn and it is their piece let them move
+      // Else, prevent them from dragging
+      return isPlayersTurn && targetColor === playerColor;
     }
 
 
@@ -1256,42 +1271,91 @@ export class BoardComponent implements OnInit {
 
       if(!wasLegal){
         return 'snapback';
-      }else{
+      }
+      else {
+        // End player's turn
+        isPlayersTurn = false;
+
+        // Add move to moves-list
         numOfMoves += 1;
         service.addMoveToList(numOfMoves, piece, source, target, newPos);
+
+        // Will be true when promote() is called
+        let wasPromoted : boolean = false;
+
+        // Promote piece if needed
         if(wasPieceTaken(oldPos, newPos)){
           board.position(promote(oldPos, newPos, target, piece, orientation), false);
+          wasPromoted = true;
         }
         else {
           if (piece == "wP" || piece == "bP") {
             board.position(promote(oldPos, newPos, target, piece, orientation), false);
+            wasPromoted = true;
           }
+        }
+
+        // Set enemy color
+        let enemyColor : string = playerColor === "w" ? "b" : "w";
+
+        if (isCheckmate(enemyColor, newPos, orientation))
+        {
+          // TODO: Needs GUI visual to display this information
+          console.log("CHECKMATE!!! PLAYER WINS!!!");
+
+          // End of game has been reached
+          // Will return without setting isPlayersTurn to true, therefore ending control of board
+          return "trash";
         }
 
         // POST - Request JSON
         let restPackage : object = {
           "fenString": board.fen(),
-          "aiColor": piece[0],
+          "aiColor": enemyColor,
           "depth": depth,
           "orientation": orientation
         };
 
         // AI's Best move on a FEN string
-        let aiBoardFen : any;
+        let aiBoardFen : string = "";
+
+        // If true REST call will be ignored
+        // Should be TRUE on Frontend-only project and FALSE on full JBoss project
+        const devMode : boolean = true; // TODO: Temporary
+        if (devMode) {
+          isPlayersTurn = true;
+          console.log(board.fen());
+          return "trash"
+        }
 
         // Makes POST request to get AI's best move and record to aiBoardFen
-       /* This part is commented because without the JBOSS server it gives a lot of errors and breaks everything
-       let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
+        let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
 
         // Wait 2 seconds
         setTimeout(function () {
-          // TODO: Should check if request result is not undefined
+          // While and if request is still pending do nothing
+          while (aiBoardFen == "") {
+            // Do nothing
+          }
           // Set board state to aiBoardFen
           board.position(ChessBoard.fenToObj(aiBoardFen), true);
+
           // Stop subscription stream
           postRequest.unsubscribe();
+
+          if (isCheckmate(playerColor, ChessBoard.fenToObj(aiBoardFen), orientation))
+          {
+            // TODO: Needs GUI visual to display this information
+            console.log("CHECKMATE!!! AI WINS!!!");
+
+            // End of game has been reached
+            // Will return without setting isPlayersTurn to true, therefore ending control of board
+            return "trash";
+          }
+
+          // Resume player's turn
+          isPlayersTurn = true;
         }, 2000);
-        */
         return 'trash';
       }
     }
@@ -1319,7 +1383,7 @@ export class BoardComponent implements OnInit {
 
   //Resets the Board state back to the board state of the user's previous move
   undo() {
-    
+
     this.moveListLength = this.promotionService.getMoveList().length - 1;
     if(this.moveListLength < 3){
       this.newFenString = 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP';
@@ -1327,7 +1391,7 @@ export class BoardComponent implements OnInit {
       this.newFenString = this.promotionService.getMoveList()[this.moveListLength - 2].fen;
     }
     this.promotionService.undoMovesFromList();
-    
+
     this.startBoard.position(this.newFenString, true)
   }
 }

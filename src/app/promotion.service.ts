@@ -13,7 +13,7 @@ export class PromotionService {
   private urlREST : string = "http://localhost:8080/PromotionChess/api/chess";
 
   fenString: any = 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP';
-  constructor(/*private http: HttpClient*/) { }
+  constructor(private http: HttpClient) { }
 
   addMoveToList(index, chosenPiece, src, tar, newFen) {
     this.moves.push({id: index, piece: chosenPiece, source: src, target: tar, fen: newFen});
@@ -31,7 +31,6 @@ export class PromotionService {
     return this.moves;
   }
 
-  /* This is commented out because without the JBOSS server it breaks everything
   getAIMove(boardPackage: object): Observable<string> {
     // let postOptions = {observe: 'response', responseType: 'text'};
     let postOptions: {
@@ -47,7 +46,6 @@ export class PromotionService {
     //data => this.data = data
     return this.http.post(this.urlREST, boardPackage, { observe: 'body', responseType: 'text'});
   }
-  */
 
   getPlayerOrientation() {
     return this.playerOrientation;
