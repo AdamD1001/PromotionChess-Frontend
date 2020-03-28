@@ -1239,19 +1239,23 @@ export class BoardComponent implements OnInit {
     }
 
     // Activates whenever player-drag move has been made
-    function onDrop(source, target, piece, newPos, oldPos, orientation) {
-      hideLegalMoves(source, piece, oldPos, orientation);
+    function onDrop(source, target, piece, newBoardObj, oldBoardObj, orientation) {
+      // Stop displaying previous legal moves, once dropped
+      hideLegalMoves(source, piece, oldBoardObj, orientation);
 
-      let legalSpaces = getLegalMoves(source, piece, oldPos, orientation);
+      // Get legal moves of oldBoardObj
+      let legalSpaces = getLegalMoves(source, piece, oldBoardObj, orientation);
       let wasLegal: boolean;
       wasLegal = false;
 
+      // Determine if new location is in legal moves
       for(let key in legalSpaces){
         if(target === legalSpaces[key]){
           wasLegal = true;
         }
       }
 
+      // If move was illegal, snap back to old position
       if(!wasLegal){
         return 'snapback';
       }
@@ -1261,14 +1265,18 @@ export class BoardComponent implements OnInit {
 
         // Add move to moves-list
         numOfMoves += 1;
-        service.addMoveToList(numOfMoves, piece, source, target, newPos);
+        service.addMoveToList(numOfMoves, piece, source, target, newBoardObj);
 
         // Will be true when promote() is called
         let wasPromoted : boolean = false;
 
+        // Player's Move board object initialized as default new board position
+        let playersMoveBoard : any = newBoardObj;
+
         // Promote piece if needed
-        if(wasPieceTaken(oldPos, newPos)){
-          board.position(promote(oldPos, newPos, target, piece, orientation), false);
+        if(wasPieceTaken(oldBoardObj, newBoardObj)){
+          playersMoveBoard = promote(oldBoardObj, newBoardObj, target, piece, orientation);
+          board.position(playersMoveBoard, false);
           wasPromoted = true;
         }
         else {
@@ -1279,7 +1287,8 @@ export class BoardComponent implements OnInit {
                 // If white pawn has reach enemy row
                 if (target[1] == "8") {
                   // Promotes pawn to queen and returns fen string
-                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  playersMoveBoard = promote(oldBoardObj, newBoardObj, target, piece, orientation);
+                  board.position(playersMoveBoard, false);
                   wasPromoted = true;
                 }
               }
@@ -1287,7 +1296,8 @@ export class BoardComponent implements OnInit {
                 // If black pawn has reach enemy row
                 if (target[1] == "1") {
                   // Promotes pawn to queen and returns fen string
-                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  playersMoveBoard = promote(oldBoardObj, newBoardObj, target, piece, orientation);
+                  board.position(playersMoveBoard, false);
                   wasPromoted = true;
                 }
               }
@@ -1297,7 +1307,8 @@ export class BoardComponent implements OnInit {
                 // If white pawn has reach enemy row
                 if (target[1] == "1") {
                   // Promotes pawn to queen and returns fen string
-                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  playersMoveBoard = promote(oldBoardObj, newBoardObj, target, piece, orientation);
+                  board.position(playersMoveBoard, false);
                   wasPromoted = true;
                 }
               }
@@ -1305,7 +1316,8 @@ export class BoardComponent implements OnInit {
                 // If black pawn has reach enemy row
                 if (target[1] == "8") {
                   // Promotes pawn to queen and returns fen string
-                  board.position(promote(oldPos, newPos, target, piece, orientation), false);
+                  playersMoveBoard = promote(oldBoardObj, newBoardObj, target, piece, orientation);
+                  board.position(playersMoveBoard, false);
                   wasPromoted = true;
                 }
               }
@@ -1316,7 +1328,7 @@ export class BoardComponent implements OnInit {
         // Set enemy color
         let enemyColor : string = playerColor === "w" ? "b" : "w";
 
-        if (isCheckmate(enemyColor, newPos, orientation))
+        if (isCheckmate(enemyColor, newBoardObj, orientation))
         {
           // TODO: Needs GUI visual to display this information
           console.log("CHECKMATE!!! PLAYER WINS!!!");
@@ -1333,11 +1345,14 @@ export class BoardComponent implements OnInit {
 
         // POST - Request JSON
         let restPackage : object = {
-          "fenString": board.fen(),
+          "fenString": ChessBoard.objToFen(playersMoveBoard),
           "aiColor": enemyColor,
           "depth": depth,
           "orientation": orientation
         };
+
+        // Update board position
+        board.position(playersMoveBoard, false);
 
         // AI's Best move on a FEN string
         let aiBoardFen : string = "";
@@ -1389,7 +1404,6 @@ export class BoardComponent implements OnInit {
 
     // Activates whenever animation has occurred (AI has made move)
     function onMoveEnd(oldPos, newPos) {
-
     }
 
     //Activates whenever mouse enters square
