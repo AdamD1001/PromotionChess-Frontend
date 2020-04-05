@@ -7,7 +7,7 @@ import {catchError, map, tap} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PromotionService {
-  private depthOfDifficulty: number = 4;
+  private depthOfDifficulty: number = 1;
   private playerOrientation: string = "white";
   private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String}> = [];
   private urlREST : string = "http://localhost:8080/PromotionChess/api/chess";

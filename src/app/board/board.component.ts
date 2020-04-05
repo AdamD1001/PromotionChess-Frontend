@@ -41,7 +41,7 @@ export class BoardComponent implements OnInit {
 
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
-      position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
+      position: 'ppppkppp/pppppppp/8/p7/8/8/PPPPPPPP/PPPPKPPP',
       draggable: true,
       orientation: this.orientation,
       onChange: onChange,
@@ -58,6 +58,25 @@ export class BoardComponent implements OnInit {
     let depth = this.difficultyDepth;
     let playerColor = this.playerColor;
     let isPlayersTurn = this.isPlayersTurn;
+    let orientation = this.orientation;
+    const devMode : boolean = true;
+
+    if (!isPlayersTurn && !devMode) {
+      const aiColor : string = playerColor == "w" ? "b" : "w";
+
+      // POST - Request JSON
+      let restPackage : object = {
+        "fenString": board.fen(),
+        "aiColor": aiColor,
+        "depth": depth,
+        "orientation": orientation
+      };
+
+      getAIBestBoard(restPackage);
+    }
+    else if (!isPlayersTurn && devMode){
+      isPlayersTurn = true;
+    }
 
 
     // Sends board changes to move-list component
@@ -84,10 +103,12 @@ export class BoardComponent implements OnInit {
       let row : number;
       let col : number;
       let moves : string[] = [];
+      let allSquaresWhite : Array<string[]>;
+      let allSquaresBlack : Array<string[]>;
       let allSquares : Array<string[]>;
 
-      // 2D Array of all square combinations
-      allSquares = [["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"],
+      // 2D Array of all square combinations in WHITE orientation
+      allSquaresWhite = [["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"],
         ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"],
         ["a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6"],
         ["a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5"],
@@ -95,6 +116,19 @@ export class BoardComponent implements OnInit {
         ["a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3"],
         ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
         ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]];
+
+      // 2D Array of all square combinations in BLACK orientation
+      allSquaresBlack = [["h1", "g1", "f1", "e1", "d1", "c1", "b1", "a1"],
+        ["h2", "g2", "f2", "e2", "d2", "c2", "b2", "a2"],
+        ["h3", "g3", "f3", "e3", "d3", "c3", "b3", "a3"],
+        ["h4", "g4", "f4", "e4", "d4", "c4", "b4", "a4"],
+        ["h5", "g5", "f5", "e5", "d5", "c5", "b5", "a5"],
+        ["h6", "g6", "f6", "e6", "d6", "c6", "b6", "a6"],
+        ["h7", "g7", "f7", "e7", "d7", "c7", "b7", "a7"],
+        ["h8", "g8", "f8", "e8", "d8", "c8", "b8", "a8"]];
+
+      // Sets the correct board layout
+      allSquares = orientation == "white" ? allSquaresWhite : allSquaresBlack;
 
       // Assign row and col values
       for (let i: number = 0; i < allSquares.length; i++) {
@@ -1356,53 +1390,126 @@ export class BoardComponent implements OnInit {
         // Update board position
         board.position(playersMoveBoard, false);
 
-        // AI's Best move on a FEN string
-        let aiBoardFen : string = "";
-
-        // If true REST call will be ignored
-        // Should be TRUE on Frontend-only project and FALSE on full JBoss project
-        const devMode : boolean = true; // TODO: Temporary
-        if (devMode) {
+        // TODO: DevMode check is temporary. Remove upon project completion
+        if (!devMode) {
+          // AI's Turn
+          getAIBestBoard(restPackage);
+        }
+        else {
           isPlayersTurn = true;
-          if (wasPromoted) {
-            return "trash";
-          }
-          else {
-            return "drop";
-          }
         }
 
-        // Makes POST request to get AI's best move and record to aiBoardFen
-        let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
-
-        // Wait 2 seconds
-        setTimeout(function () {
-          // While and if request is still pending do nothing
-          while (aiBoardFen == "") {
-            // Do nothing
-          }
-          // Set board state to aiBoardFen
-          board.position(ChessBoard.fenToObj(aiBoardFen), true);
-
-          // Stop subscription stream
-          postRequest.unsubscribe();
-
-          if (isCheckmate(playerColor, ChessBoard.fenToObj(aiBoardFen), orientation))
-          {
-            // TODO: Needs GUI visual to display this information
-            console.log("CHECKMATE!!! AI WINS!!!");
-
-            // End of game has been reached
-            // Will return without setting isPlayersTurn to true, therefore ending control of board
-            return "trash";
-          }
-
-          // Resume player's turn
-          isPlayersTurn = true;
-        }, 2000);
         return 'trash';
       }
     }
+
+
+    // Sets board position object to AI's turn in the form of a board
+    // Return Type: Void
+    function getAIBestBoard(restPackage: object) {
+      // AI's Best move on a FEN string
+      let aiBoardFen : string = "";
+
+      let originalBoard : object = ChessBoard.fenToObj(restPackage["fenString"]);
+      let aiColor : string = restPackage["aiColor"];
+      console.log(originalBoard);
+
+      // Makes POST request to get AI's best move and record to aiBoardFen
+      let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
+
+      // Wait 2 seconds
+      setTimeout(function () {
+        // While and if request is still pending do nothing
+        while (aiBoardFen == "") {
+          // Do nothing
+        }
+        // Set board state to aiBoardFen
+        board.position(ChessBoard.fenToObj(aiBoardFen), true);
+
+        // Fields for move-list
+        let newBoard : object = ChessBoard.fenToObj(aiBoardFen);
+        let pieceThatWasMoved : string;
+        let originalSquare : string;
+        let newSquare: string;
+        let didPieceAttack : boolean = wasPieceTaken(originalBoard, newBoard);
+        let wasPromoted : boolean = didPieceAttack; // TODO: Will be used with future version of move-list to show that promotion occurred
+
+        // Finds and sets fields necessary to adding to move-list
+        for (let currentOldSquare in originalBoard) {
+          let currentOrigPiece : string = originalBoard[currentOldSquare];
+          // If current piece from original board is an AI piece
+          if (currentOrigPiece[0] === aiColor) {
+            // If the square from the old board does not have a piece on it in the new board
+            if (!(currentOldSquare in newBoard)) {
+              originalSquare = currentOldSquare;
+              pieceThatWasMoved = currentOrigPiece;
+              // If move was a non-piece-taking move
+              if (!didPieceAttack) {
+                // Iterate through each square in the new board
+                for (let currentNewSquare in newBoard) {
+                  let currentNewPiece : string = newBoard[currentNewSquare];
+                  // If current piece from new board is an AI piece
+                  if (currentNewPiece[0] === aiColor) {
+                    // If the square from the new board does not have a piece on it in the old board
+                    if (!(currentNewSquare in originalBoard)) {
+                      newSquare = currentNewSquare;
+                      // If piece type is a Pawn and was promoted via reaching home row without taking a piece
+                      if (pieceThatWasMoved === "wP" && newSquare[1] == "8") {
+                        wasPromoted = true;
+                      }
+                      if (pieceThatWasMoved === "bP" && newSquare[1] == "1") {
+                        wasPromoted = true;
+                      }
+                      break;
+                    }
+                  }
+                }
+              }
+              // If move was a piece-taking move
+              else {
+                // Iterate through new board
+                for (let currentNewSquare in newBoard) {
+                  let currentNewPiece : string = newBoard[currentNewSquare];
+                  // If current piece is an AI piece
+                  if (currentNewPiece[0] === aiColor) {
+                    // If current square contained a piece both in the old and new boards
+                    if (currentNewSquare in newBoard && currentNewSquare in originalBoard) {
+                      // If piece in current square in both new and board square are not the same piece
+                      if (currentNewPiece !== originalBoard[currentNewSquare]) {
+                        newSquare = currentNewSquare;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+              break;
+            }
+          }
+        }
+
+        // Add move to moves-list
+        numOfMoves += 1;
+        service.addMoveToList(numOfMoves, pieceThatWasMoved, originalSquare, newSquare, newBoard);
+
+        // Stop subscription stream
+        postRequest.unsubscribe();
+
+        if (isCheckmate(playerColor, ChessBoard.fenToObj(aiBoardFen), orientation))
+        {
+          // TODO: Needs GUI visual to display this information
+          console.log("CHECKMATE!!! AI WINS!!!");
+
+          // End of game has been reached
+          // Will return without setting isPlayersTurn to true, therefore ending control of board
+          return;
+        }
+
+        // Resume player's turn
+        isPlayersTurn = true;
+      }, 2000);
+    }
+
 
     // Activates whenever animation has occurred (AI has made move)
     function onMoveEnd(oldPos, newPos) {
