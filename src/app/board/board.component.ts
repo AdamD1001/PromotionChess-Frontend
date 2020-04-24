@@ -57,7 +57,7 @@ export class BoardComponent implements OnInit {
 
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
-      position: '4k3/R6R/8/8/8/8/8/7K', //ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP
+      position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP', 
       draggable: true,
       orientation: this.orientation,
       onChange: onChange,
@@ -1332,7 +1332,7 @@ export class BoardComponent implements OnInit {
 
         // Add move to moves-list
         numOfMoves += 1;
-        service.addMoveToList(numOfMoves, piece, source, target, newBoardObj);
+        // service.addMoveToList(numOfMoves, piece, source, target, newBoardObj, wasPromoted);
 
         // Will be true when promote() is called
         let wasPromoted : boolean = false;
@@ -1391,6 +1391,9 @@ export class BoardComponent implements OnInit {
             }
           }
         }
+
+        //add move to moveList
+        service.addMoveToList(numOfMoves, piece, source, target, newBoardObj, wasPromoted);
 
         // Set enemy color
         let enemyColor : string = playerColor === "w" ? "b" : "w";
@@ -1521,7 +1524,7 @@ export class BoardComponent implements OnInit {
 
       // Add move to moves-list
       numOfMoves += 1;
-      service.addMoveToList(numOfMoves, pieceThatWasMoved, originalSquare, newSquare, newBoard);
+      service.addMoveToList(numOfMoves, pieceThatWasMoved, originalSquare, newSquare, newBoard, wasPromoted);
 
       // Stop subscription stream
       // postRequest.unsubscribe();

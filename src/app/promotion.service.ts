@@ -10,15 +10,15 @@ export class PromotionService {
   private onHomePage: boolean = true;
   private depthOfDifficulty: number = 2;
   private playerOrientation: string = "white";
-  private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String}> = [];
+  private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String, promoted: boolean}> = [];
   private urlREST : string = "http://localhost:8080/PromotionChess/api/chess";
   public isPOSTLoading : boolean = false; // TODO: Should consider using this variable to display some loading symbol
 
   fenString: any = 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP';
   constructor(private http: HttpClient) { }
 
-  addMoveToList(index, chosenPiece, src, tar, newFen) {
-    this.moves.push({id: index, piece: chosenPiece, source: src, target: tar, fen: newFen});
+  addMoveToList(index, chosenPiece, src, tar, newFen, promo) {
+    this.moves.push({id: index, piece: chosenPiece, source: src, target: tar, fen: newFen, promoted: promo});
 
     // console.log('addMoveToList was called!');
     // console.log(this.moves)

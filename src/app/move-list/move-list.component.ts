@@ -13,7 +13,7 @@ export class MoveListComponent implements OnInit {
   listOfMoves;
   ngOnInit() {
 
-    this.listOfMoves = this.promotionService.getMoveList().reverse();
+    this.listOfMoves = this.promotionService.getMoveList();
 
     console.log(this.listOfMoves)
 
