@@ -46,13 +46,16 @@ export class PlayerOptionsComponent implements OnInit {
     }
 
     this.isWhite = () => {
+      console.log(this.form.value);
+      console.log(this.form.value.formControl.level);
       this.promotionService.setPlayerOrientation("white");
-      this.promotionService.setDepthOfDifficulty(this.form.value["difficulty"]);
+      this.promotionService.setDepthOfDifficulty(this.form.value.formControl.level);
+      console.log(this.promotionService.getDepthOfDifficulty());
     };
 
     this.isBlack = () => {
       this.promotionService.setPlayerOrientation("black");
-      this.promotionService.setDepthOfDifficulty(this.form.value["difficulty"]);
+      this.promotionService.setDepthOfDifficulty(this.form.value.formControl.level);
     };
   }
 
