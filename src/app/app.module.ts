@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import {HttpClientModule} from '@angular/common/http';
+import { PWinsModalComponent } from './pwins-modal/pwins-modal.component';
+import { AIWinsModalComponent } from './aiwins-modal/aiwins-modal.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {HttpClientModule} from '@angular/common/http';
     PlayervsAIComponent,
     AiVsAiComponent,
     PlayerOptionsComponent,
-    RulesPageComponent
+    RulesPageComponent,
+    PWinsModalComponent,
+    AIWinsModalComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +42,6 @@ import {HttpClientModule} from '@angular/common/http';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [RulesPageComponent]
+  entryComponents: [RulesPageComponent, PWinsModalComponent]
 })
 export class AppModule { }

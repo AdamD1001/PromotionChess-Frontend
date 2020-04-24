@@ -7,6 +7,8 @@ import {catchError, map, tap} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PromotionService {
+
+  private onHomePage: boolean = true;
   private depthOfDifficulty: number = 4;
   private playerOrientation: string = "white";
   private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String}> = [];
@@ -61,5 +63,13 @@ export class PromotionService {
 
   setDepthOfDifficulty(depth: number) {
     this.depthOfDifficulty = depth;
+  }
+
+  getOnHomePage(){
+    return this.onHomePage;
+  }
+
+  setOnHomePage(value: boolean){
+    this.onHomePage = value;
   }
 }

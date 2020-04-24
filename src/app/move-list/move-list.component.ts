@@ -10,10 +10,12 @@ export class MoveListComponent implements OnInit {
 
   constructor(private promotionService: PromotionService) { }
 
-  moveList;
+  listOfMoves;
   ngOnInit() {
 
-    this.moveList = this.promotionService.getMoveList().reverse();
+    this.listOfMoves = this.promotionService.getMoveList().reverse();
+
+    console.log(this.listOfMoves)
 
   }
 

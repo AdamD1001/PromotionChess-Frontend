@@ -4,6 +4,7 @@ import {tap} from "rxjs/operators";
 import {Observable, Subscribable} from "rxjs";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RulesPageComponent } from '../rules-page/rules-page.component';
+import { PWinsModalComponent } from '../pwins-modal/pwins-modal.component';
 
 declare var ChessBoard: any;
 @Component({
@@ -39,9 +40,24 @@ export class BoardComponent implements OnInit {
     const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
   }
 
+  openGameOverModal(playerWon){
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    
+    if(playerWon){
+      const modalDialog = this.matDialog.open(PWinsModalComponent, dialogConfig);
+    }else {
+      const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+    }
+  }
+
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
-      position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
+      position: '4k3/R6R/8/8/8/8/8/7K', //ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP
       draggable: true,
       orientation: this.orientation,
       onChange: onChange,
@@ -63,6 +79,21 @@ export class BoardComponent implements OnInit {
     // Sends board changes to move-list component
     function onChange (oldPos, newPos) {
     }
+
+    // function openGameOverModal(playerWon){
+    //   const dialogConfig = new MatDialogConfig();
+    // // The user can't close the dialog by clicking outside its body
+    // dialogConfig.disableClose = true;
+    // dialogConfig.id = "modal-component";
+    // dialogConfig.height = "350px";
+    // dialogConfig.width = "600px";
+    
+    // if(playerWon){
+    //   const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+    // }else {
+    //   const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+    // }
+    // }
 
 
     // Activates when piece drag begins
@@ -1333,7 +1364,8 @@ export class BoardComponent implements OnInit {
         if (isCheckmate(enemyColor, newBoardObj, orientation))
         {
           // TODO: Needs GUI visual to display this information
-          console.log("CHECKMATE!!! PLAYER WINS!!!");
+          //console.log("CHECKMATE!!! PLAYER WINS!!!");
+          document.getElementById("GameOver").click();
 
           // End of game has been reached
           // Will return without setting isPlayersTurn to true, therefore ending control of board

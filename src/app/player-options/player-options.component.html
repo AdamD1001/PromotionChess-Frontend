@@ -1,9 +1,9 @@
 <form [formGroup]="form" (ngSubmit)="submit()" style="text-align: center;">
     <label for="difficulty">A.I Difficulty</label>
     <br>
-    <select formControlName="difficulty" id="mode">
-      <option *ngFor="let mode of difficulty; let i = index" [value]="difficulty[i].level">
-        {{difficulty[i].name}}
+    <select formControlName="formControl">
+      <option [ngValue]="mode" *ngFor="let mode of difficulty;">
+        {{mode.name}}
       </option>
     </select>
     
