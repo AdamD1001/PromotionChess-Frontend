@@ -1406,108 +1406,106 @@ export class BoardComponent implements OnInit {
 
     // Sets board position object to AI's turn in the form of a board
     // Return Type: Void
-    function getAIBestBoard(restPackage: object) {
+    async function getAIBestBoard(restPackage: object) {
       // AI's Best move on a FEN string
       let aiBoardFen : string = "";
 
       let originalBoard : object = ChessBoard.fenToObj(restPackage["fenString"]);
       let aiColor : string = restPackage["aiColor"];
-      console.log(originalBoard);
 
+      // Sets AI loading status to true
+      service.isPOSTLoading = true;
       // Makes POST request to get AI's best move and record to aiBoardFen
-      let postRequest = service.getAIMove(restPackage).subscribe(results => aiBoardFen = results);
+      let postRequest = await service.getAIBestMove(restPackage);
+      if (typeof postRequest === "string") {
+        aiBoardFen = postRequest;
+        service.isPOSTLoading = false;
+      }
 
-      // Wait 2 seconds
-      setTimeout(function () {
-        // While and if request is still pending do nothing
-        while (aiBoardFen == "") {
-          // Do nothing
-        }
-        // Set board state to aiBoardFen
-        board.position(ChessBoard.fenToObj(aiBoardFen), true);
+      // Set board state to aiBoardFen
+      board.position(ChessBoard.fenToObj(aiBoardFen), true);
 
-        // Fields for move-list
-        let newBoard : object = ChessBoard.fenToObj(aiBoardFen);
-        let pieceThatWasMoved : string;
-        let originalSquare : string;
-        let newSquare: string;
-        let didPieceAttack : boolean = wasPieceTaken(originalBoard, newBoard);
-        let wasPromoted : boolean = didPieceAttack; // TODO: Will be used with future version of move-list to show that promotion occurred
+      // Fields for move-list
+      let newBoard : object = ChessBoard.fenToObj(aiBoardFen);
+      let pieceThatWasMoved : string;
+      let originalSquare : string;
+      let newSquare: string;
+      let didPieceAttack : boolean = wasPieceTaken(originalBoard, newBoard);
+      let wasPromoted : boolean = didPieceAttack; // TODO: Will be used with future version of move-list to show that promotion occurred
 
-        // Finds and sets fields necessary to adding to move-list
-        for (let currentOldSquare in originalBoard) {
-          let currentOrigPiece : string = originalBoard[currentOldSquare];
-          // If current piece from original board is an AI piece
-          if (currentOrigPiece[0] === aiColor) {
-            // If the square from the old board does not have a piece on it in the new board
-            if (!(currentOldSquare in newBoard)) {
-              originalSquare = currentOldSquare;
-              pieceThatWasMoved = currentOrigPiece;
-              // If move was a non-piece-taking move
-              if (!didPieceAttack) {
-                // Iterate through each square in the new board
-                for (let currentNewSquare in newBoard) {
-                  let currentNewPiece : string = newBoard[currentNewSquare];
-                  // If current piece from new board is an AI piece
-                  if (currentNewPiece[0] === aiColor) {
-                    // If the square from the new board does not have a piece on it in the old board
-                    if (!(currentNewSquare in originalBoard)) {
+      // Finds and sets fields necessary to adding to move-list
+      for (let currentOldSquare in originalBoard) {
+        let currentOrigPiece : string = originalBoard[currentOldSquare];
+        // If current piece from original board is an AI piece
+        if (currentOrigPiece[0] === aiColor) {
+          // If the square from the old board does not have a piece on it in the new board
+          if (!(currentOldSquare in newBoard)) {
+            originalSquare = currentOldSquare;
+            pieceThatWasMoved = currentOrigPiece;
+            // If move was a non-piece-taking move
+            if (!didPieceAttack) {
+              // Iterate through each square in the new board
+              for (let currentNewSquare in newBoard) {
+                let currentNewPiece : string = newBoard[currentNewSquare];
+                // If current piece from new board is an AI piece
+                if (currentNewPiece[0] === aiColor) {
+                  // If the square from the new board does not have a piece on it in the old board
+                  if (!(currentNewSquare in originalBoard)) {
+                    newSquare = currentNewSquare;
+                    // If piece type is a Pawn and was promoted via reaching home row without taking a piece
+                    if (pieceThatWasMoved === "wP" && newSquare[1] == "8") {
+                      wasPromoted = true;
+                    }
+                    if (pieceThatWasMoved === "bP" && newSquare[1] == "1") {
+                      wasPromoted = true;
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+            // If move was a piece-taking move
+            else {
+              // Iterate through new board
+              for (let currentNewSquare in newBoard) {
+                let currentNewPiece : string = newBoard[currentNewSquare];
+                // If current piece is an AI piece
+                if (currentNewPiece[0] === aiColor) {
+                  // If current square contained a piece both in the old and new boards
+                  if (currentNewSquare in newBoard && currentNewSquare in originalBoard) {
+                    // If piece in current square in both new and board square are not the same piece
+                    if (currentNewPiece !== originalBoard[currentNewSquare]) {
                       newSquare = currentNewSquare;
-                      // If piece type is a Pawn and was promoted via reaching home row without taking a piece
-                      if (pieceThatWasMoved === "wP" && newSquare[1] == "8") {
-                        wasPromoted = true;
-                      }
-                      if (pieceThatWasMoved === "bP" && newSquare[1] == "1") {
-                        wasPromoted = true;
-                      }
                       break;
                     }
                   }
                 }
               }
-              // If move was a piece-taking move
-              else {
-                // Iterate through new board
-                for (let currentNewSquare in newBoard) {
-                  let currentNewPiece : string = newBoard[currentNewSquare];
-                  // If current piece is an AI piece
-                  if (currentNewPiece[0] === aiColor) {
-                    // If current square contained a piece both in the old and new boards
-                    if (currentNewSquare in newBoard && currentNewSquare in originalBoard) {
-                      // If piece in current square in both new and board square are not the same piece
-                      if (currentNewPiece !== originalBoard[currentNewSquare]) {
-                        newSquare = currentNewSquare;
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
-              break;
             }
+            break;
           }
         }
+      }
 
-        // Add move to moves-list
-        numOfMoves += 1;
-        service.addMoveToList(numOfMoves, pieceThatWasMoved, originalSquare, newSquare, newBoard);
+      // Add move to moves-list
+      numOfMoves += 1;
+      service.addMoveToList(numOfMoves, pieceThatWasMoved, originalSquare, newSquare, newBoard);
 
-        // Stop subscription stream
-        postRequest.unsubscribe();
+      // Stop subscription stream
+      // postRequest.unsubscribe();
 
-        if (isCheckmate(playerColor, ChessBoard.fenToObj(aiBoardFen), orientation))
-        {
-          // TODO: Needs GUI visual to display this information
-          console.log("CHECKMATE!!! AI WINS!!!");
+      if (isCheckmate(playerColor, ChessBoard.fenToObj(aiBoardFen), orientation))
+      {
+        // TODO: Needs GUI visual to display this information
+        console.log("CHECKMATE!!! AI WINS!!!");
 
-          // End of game has been reached
-          // Will return without setting isPlayersTurn to true, therefore ending control of board
-          return;
-        }
+        // End of game has been reached
+        // Will return without setting isPlayersTurn to true, therefore ending control of board
+        return;
+      }
 
-        // Resume player's turn
-        isPlayersTurn = true;
-      }, 2000);
+      // Resume player's turn
+      isPlayersTurn = true;
     }
 
 
