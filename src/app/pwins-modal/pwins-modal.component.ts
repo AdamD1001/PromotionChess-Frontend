@@ -11,8 +11,7 @@ export class PWinsModalComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<PWinsModalComponent>, private promotionService: PromotionService) {}
 
-  currentDifficulty = 2;
-  //this.promotionService.getDepthOfDifficulty();
+  currentDifficulty = this.promotionService.getDepthOfDifficulty();
   difficultyName;
   ngOnInit() {
     if(this.currentDifficulty == 1){

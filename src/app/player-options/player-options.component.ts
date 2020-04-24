@@ -28,7 +28,7 @@ export class PlayerOptionsComponent implements OnInit {
   }
   submit() {
     console.log(this.form.value);
-    //this.promotionService.setDepthOfDifficulty(this.form.value)
+    this.promotionService.setDepthOfDifficulty(this.form.value.level)
 
   }
 
