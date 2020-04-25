@@ -1,10 +1,11 @@
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
     <div id="board1" style="flex: 0 0 70%; padding-left: 29%; padding-top: 10%; padding-bottom: 5%;"></div>
-    
+
     <div style="flex: 0 0 30%;"></div>
     <button style="flex: 0 0 35%;"(click)="undo()"> Undo </button>
     <button style="flex: 0 0 35%" (click)="openModal()" > Rules </button>
     <button id="GameOver" [hidden]="true" (click)="openGameOverModal(true)" >No See</button>
+    <button id="AIGameOver" [hidden]="true" (click)="openGameOverModal(false)" >No See</button>
 
 </div>
 

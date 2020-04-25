@@ -1,1 +1,12 @@
-<p>aiwins-modal works!</p>
+<div id="modal-content-wrapper">
+    <header id="modal-header">
+        <h1 id="modal-title">You Lost!!</h1>
+    </header>
+    <section id="modal-body">
+        <p>Congratulations!</p>
+        <p>The AI beat you on {{difficultyName}} difficulty!</p>
+    </section>
+    <footer id="modal-footer">
+        <button mat-raised-button id="modal-cancel-button" onclick="location.href='/PromotionChess/'" (click)="closeModal()">Main Page</button>
+    </footer>
+</div>
