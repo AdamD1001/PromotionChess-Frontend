@@ -34,47 +34,51 @@ export class AiVsAiComponent implements OnInit {
     let orientation = this.orientation;
     let endOfGame : boolean = false;
 
-    // AI vs AI loop
-    while (!endOfGame) {
-      if (isWhiteTurn) {
-        if (!isCheckmate("w", board.position(), orientation)) {
-          // POST - Request JSON
-          let restPackage : object = {
-            "fenString": board.fen(),
-            "aiColor": "w",
-            "depth": depth,
-            "orientation": orientation
-          };
+    // AI vs. AI Loop
+    aiLoop();
 
-          getAIBestBoard(restPackage);
+    async function aiLoop() {
+      while (!endOfGame) {
+        if (isWhiteTurn) {
+          if (!isCheckmate("w", board.position(), orientation)) {
+            // POST - Request JSON
+            let restPackage : object = {
+              "fenString": board.fen(),
+              "aiColor": "w",
+              "depth": depth,
+              "orientation": orientation
+            };
+
+            let isMoveDone = await getAIBestBoard(restPackage);
+          }
+          else {
+            endOfGame = true;
+            // TODO: Modal display
+          }
         }
         else {
-          endOfGame = true;
-          // TODO: Modal display
-        }
-      }
-      else {
-        if (!isCheckmate("b", board.position(), orientation)) {
-          // POST - Request JSON
-          let restPackage : object = {
-            "fenString": board.fen(),
-            "aiColor": "b",
-            "depth": depth,
-            "orientation": orientation
-          };
+          if (!isCheckmate("b", board.position(), orientation)) {
+            // POST - Request JSON
+            let restPackage : object = {
+              "fenString": board.fen(),
+              "aiColor": "b",
+              "depth": depth,
+              "orientation": orientation
+            };
 
-          getAIBestBoard(restPackage);
-        }
-        else {
-          endOfGame = true;
-          // TODO: Modal display
+            let isMoveDone = await getAIBestBoard(restPackage);
+          }
+          else {
+            endOfGame = true;
+            // TODO: Modal display
+          }
         }
       }
     }
 
 
     // Sets board position object to AI's turn in the form of a board
-    // Return Type: Void
+    // Return Type: Boolean
     async function getAIBestBoard(restPackage: object) {
       // AI's Best move on a FEN string
       let aiBoardFen : string = "";
@@ -183,6 +187,9 @@ export class AiVsAiComponent implements OnInit {
 
       // Resume next AI's turn
       isWhiteTurn = !isWhiteTurn;
+
+      // Returns boolean to indicate to async await that method is done
+      return true;
     }
 
 
