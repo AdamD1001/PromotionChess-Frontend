@@ -1,21 +1,10 @@
-<!--<div style="text-align: center; display: flex; flex-wrap: wrap;">-->
-<!--    <h1 style="flex: 100%">Welcome to Promotion Chess!</h1>-->
-<!--    <button style="flex: 35%; padding-left: 15%" (click)="onHomePage = false" [hidden]="!onHomePage" [routerLink]="'/ai-vs-ai'">A.I Versus A.I</button>-->
-<!--    <button style="flex: 35%; padding-right: 15%" (click)="onHomePage = false" [hidden]="!onHomePage"  [routerLink]="'/player-options'">Player Versus A.I</button>-->
+<div style="text-align: center;">
+    <img src="../../img/Banner.png" alt="Banner" style="flex: 100%; text-align: center; padding-bottom: 2%;">
 
-<!--</div>-->
-
-<div class="center-stack" style="text-align: center; display: inline-block;">
-    <h1 style="flex: 100%">Welcome to Promotion Chess!</h1>
-<!--    <button type="submit" (click)="onHomePage = false" [hidden]="!onHomePage"  [routerLink]="'/player-options'">-->
-<!--&lt;!&ndash;        <img src="./img/PlayerVsAIButton.png" alt="Player vs. AI"/>&ndash;&gt;-->
-<!--    </button>-->
-<!--    <br>-->
-<!--    <button type="submit" (click)="onHomePage = false" [hidden]="!onHomePage" [routerLink]="'/ai-vs-ai'">-->
-<!--&lt;!&ndash;        <img src="./img/PlayerVsAIButton.png" alt="Player vs. AI"/>&ndash;&gt;-->
-<!--    </button>-->
-
-
-    <input class="buttonStyle" id="player-vs-ai-button" type="submit" value="" (click)="onHomePage = false" [hidden]="!onHomePage"  [routerLink]="'/player-options'">
-    <input class="buttonStyle" id="ai-vs-ai-button" type="submit" value="" (click)="onHomePage = false" [hidden]="!onHomePage"  [routerLink]="'/ai-vs-ai'">
+    <a class="buttonStyle" (click)="onHomePage = false" *ngIf="this.router.url == '/'"  [routerLink]="'/player-options'" >
+        <img src="../../img/PlayerVsAIButton.png" alt="Player Vs Ai">
+    </a>
+    <a class="buttonStyle"  (click)="onHomePage = false" *ngIf="this.router.url == '/'"  [routerLink]="'/ai-vs-ai'" >
+        <img src="../../img/AIVsAIButton.png" alt="Ai Vs Ai">
+    </a>
 </div>

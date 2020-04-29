@@ -3,14 +3,28 @@
   }
 
   .column1 {
-    flex: 60%
-  }
-  
-  .column2 {
-    flex: 10%;
+    flex: 65%
   }
 
   .column3 {
-      flex: 40%;
+      flex: 35%;
+      padding-left: 5%;
+      padding-right: 15%;
       text-align: center;
   }
+
+  .rulesImg {
+    flex: 0 0 100%;
+    height: 15%;
+    width: 85%;
+    padding-top: 2%;
+}
+
+.moveLooks {
+  border-color: black; 
+  border-style: solid; 
+  height: 81.5%; 
+  overflow: hidden; 
+  overflow-y: scroll;
+  padding-top: 2%;
+}

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PromotionService } from '../promotion.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-player-options',
@@ -19,7 +18,7 @@ export class PlayerOptionsComponent implements OnInit {
       {level: 4, name: 'Master'}
   ];
 
-  constructor(private formBuilder: FormBuilder, private promotionService: PromotionService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private promotionService: PromotionService) {
     this.form = this.formBuilder.group({
       formControl: [this.difficulty[1]]
 
@@ -37,13 +36,6 @@ export class PlayerOptionsComponent implements OnInit {
   isBlack() {}
 
   ngOnInit() {
-    this.href = this.router.url;
-    console.log(this.href);
-    if(this.href === "/"){
-      this.promotionService.setOnHomePage(true);
-    }else{
-      this.promotionService.setOnHomePage(false);
-    }
 
     this.isWhite = () => {
       console.log(this.form.value);

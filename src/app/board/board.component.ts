@@ -59,7 +59,7 @@ export class BoardComponent implements OnInit {
   public ngOnInit(): void{
     this.startBoard = ChessBoard('board1', {
       position: 'ppppkppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPKPPP',
-      draggable: false,
+      draggable: true,
       orientation: this.orientation,
       onChange: onChange,
       onDragStart: onDragStart,

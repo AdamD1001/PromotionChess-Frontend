@@ -20,9 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": [
-              "src/img/favicon.ico",
-              "src/img/goldenArrow99.ico",
-              "src/img/PlayerVsAIButton.png",
+              "src/img",
               "src/assets",
               {
                 "glob": "**/*",

@@ -26,7 +26,6 @@ export class AIWinsModalComponent implements OnInit {
   }
 
   closeModal(){
-    this.promotionService.setOnHomePage(true);
     this.dialogRef.close();
   }
 

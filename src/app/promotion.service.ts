@@ -6,8 +6,6 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common
   providedIn: 'root'
 })
 export class PromotionService {
-
-  private onHomePage: boolean = true;
   private depthOfDifficulty: number = 2;
   private playerOrientation: string = "white";
   private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String, promoted: boolean}> = [];
@@ -70,13 +68,5 @@ export class PromotionService {
 
   setDepthOfDifficulty(depth: number) {
     this.depthOfDifficulty = depth;
-  }
-
-  getOnHomePage(){
-    return this.onHomePage;
-  }
-
-  setOnHomePage(value: boolean){
-    this.onHomePage = value;
   }
 }
