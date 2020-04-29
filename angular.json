@@ -21,6 +21,8 @@
             "aot": false,
             "assets": [
               "src/img/favicon.ico",
+              "src/img/goldenArrow99.ico",
+              "src/img/PlayerVsAIButton.png",
               "src/assets",
               {
                 "glob": "**/*",
@@ -96,6 +98,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/img/favicon.ico",
+              "src/img/goldenArrow99.ico",
+              "src/img/PlayerVsAIButton.png",
               "src/assets",
               {
                 "glob": "**/*",
