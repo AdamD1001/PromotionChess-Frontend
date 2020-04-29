@@ -1,0 +1,19 @@
+<div id="modal-content-wrapper">
+    <header id="modal-header">
+        <h1 id="modal-title" *ngIf="didWhiteWin">White AI Won!!!</h1>
+        <h1 id="modal-title" *ngIf="!didWhiteWin">Black AI Won!!!</h1>
+    </header>
+    <section id="modal-body">
+        <div *ngIf="didWhiteWin">
+            <p>The white AI won this game!</p>
+            <p>Hope it was fun to watch</p>
+        </div>
+        <div *ngIf="!didWhiteWin">
+            <p>The Black AI won this game!</p>
+            <p>Hope it was fun to watch</p>
+        </div>
+    </section>
+    <footer id="modal-footer">
+        <button mat-raised-button id="modal-cancel-button" onclick="location.href='/PromotionChess/'" (click)="closeModal()">Main Page</button>
+    </footer>
+</div>
