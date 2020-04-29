@@ -6,6 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common
   providedIn: 'root'
 })
 export class PromotionService {
+  private didWhiteWin: Boolean = true;
   private depthOfDifficulty: number = 2;
   private playerOrientation: string = "white";
   private moves: Array<{ id: number, piece: String, source: String, target: String, fen: String, promoted: boolean}> = [];
@@ -68,5 +69,13 @@ export class PromotionService {
 
   setDepthOfDifficulty(depth: number) {
     this.depthOfDifficulty = depth;
+  }
+
+  getDidWhiteWin(){
+    return this.didWhiteWin;
+  }
+
+  setDidWhiteWin(value: Boolean){
+    this.didWhiteWin = value;
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PromotionService } from '../promotion.service'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RulesPageComponent } from '../rules-page/rules-page.component';
+import { AiVsAiModalComponent } from '../ai-vs-ai-modal/ai-vs-ai-modal.component'
 
 declare var ChessBoard: any;
 @Component({
@@ -1347,6 +1348,16 @@ export class AiVsAiComponent implements OnInit {
     dialogConfig.height = "80%";
     dialogConfig.width = "60%";
     const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+  }
+
+  openGameOverModal() {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    const modalDialog = this.matDialog.open(AiVsAiModalComponent, dialogConfig);
   }
 
 }

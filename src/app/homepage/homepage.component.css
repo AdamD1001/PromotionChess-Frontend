@@ -16,6 +16,7 @@
 .row {
     text-align: center; 
     padding-bottom: 2%;
+    padding-top: 1%;
     padding-left: 19%;
 }
 
@@ -31,6 +32,14 @@
 
 #player-vs-ai-button {
     background:url(../../img/PlayerVsAIButton.png);
+}
+
+.rulesPage {
+    background-repeat: no-repeat;
+    height:200px;
+    border: 0;
+    padding-left: 24.75%;
+    padding-bottom: 1%;
 }
 
 
