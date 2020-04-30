@@ -78,4 +78,8 @@ export class PromotionService {
   setDidWhiteWin(value: Boolean){
     this.didWhiteWin = value;
   }
+
+  resetMoveList(){
+    this.moves = [];
+  }
 }

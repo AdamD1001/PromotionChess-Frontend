@@ -3,7 +3,9 @@
   }
 
   .column1 {
-    flex: 65%
+    flex: 65%;
+    flex-grow: 0;
+    max-height: 100%;
   }
 
   .column3 {

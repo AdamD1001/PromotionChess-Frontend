@@ -20,9 +20,13 @@ export class HomepageComponent implements OnInit {
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
-    dialogConfig.height = "80%";
-    dialogConfig.width = "60%";
+    dialogConfig.height = "900px";
+    dialogConfig.width = "800px";
     const modalDialog = this.matDialog.open(RulesPageComponent, dialogConfig);
+  }
+
+  resetMoves(){
+    this.promotionService.resetMoveList();
   }
   
 }

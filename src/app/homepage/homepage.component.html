@@ -1,10 +1,10 @@
 <div class="pageContainer">
     <img src="../../img/BannerWide.png" alt="Banner" class="row">
 
-    <a class="buttonStyle" *ngIf="this.router.url == '/PromotionChess/' || this.router.url == '/'"  [routerLink]="'/player-options'" >
+    <a class="buttonStyle" *ngIf="this.router.url == '/PromotionChess/' || this.router.url == '/'"  [routerLink]="'/player-options'" (click)="resetMoves()" >
         <img src="../../img/PlayerVsAIButton.png" alt="Player Vs Ai">
     </a>
-    <a class="buttonStyle"  *ngIf="this.router.url == '/PromotionChess/' || this.router.url == '/'"  [routerLink]="'/ai-vs-ai'" >
+    <a class="buttonStyle"  *ngIf="this.router.url == '/PromotionChess/' || this.router.url == '/'"  [routerLink]="'/ai-vs-ai'" (click)="resetMoves()" >
         <img src="../../img/AIVsAIButton.png" alt="Ai Vs Ai">
     </a>
     <a class="buttonStyle" *ngIf="this.router.url == '/PromotionChess/' || this.router.url == '/'" style="width: 53%;" (click)="openModal()">
