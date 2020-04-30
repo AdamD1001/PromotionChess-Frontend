@@ -21,7 +21,9 @@ export class MoveListComponent implements OnInit {
     {name: 'wN', url: '../../img/chesspieces/wikipedia/wN.png'},
     {name: 'bN', url: '../../img/chesspieces/wikipedia/bN.png'},
     {name: 'wQ', url: '../../img/chesspieces/wikipedia/wQ.png'},
-    {name: 'bQ', url: '../../img/chesspieces/wikipedia/bQ.png'}
+    {name: 'bQ', url: '../../img/chesspieces/wikipedia/bQ.png'},
+    {name: 'wK', url: '../../img/chesspieces/wikipedia/wK.png'},
+    {name: 'bK', url: '../../img/chesspieces/wikipedia/bK.png'},
   ];
   ngOnInit() {
 
