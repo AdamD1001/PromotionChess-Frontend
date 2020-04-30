@@ -54,7 +54,8 @@ export class AiVsAiComponent implements OnInit {
           }
           else {
             endOfGame = true;
-            // TODO: Modal display
+            service.setDidWhiteWin(false);
+            document.getElementById("AIvAIGameOver").click();
           }
         }
         else {
@@ -71,7 +72,8 @@ export class AiVsAiComponent implements OnInit {
           }
           else {
             endOfGame = true;
-            // TODO: Modal display
+            service.setDidWhiteWin(true);
+            document.getElementById("AIvAIGameOver").click();
           }
         }
       }

@@ -3,7 +3,11 @@
         <div>
             <h3>Move List:</h3>
             <div *ngFor="let item of listOfMoves.reverse()">
-                id: {{ item.id }}, Piece: {{ item.piece }}, Move: {{ item.source }}-{{ item.target }}, Promoted: {{item.promoted}}
+                <img style="width: 5%; height: 5%" [src]="findImage(item.piece)" alt="Piece">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Move: {{ item.source }}-{{ item.target }}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img style="width: 4%; height: 4%" *ngIf="item.promoted" src="../../img/goldenArrow99.png" alt="Arrow">
             </div>
         </div>
     </nav>

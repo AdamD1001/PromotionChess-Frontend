@@ -3,7 +3,34 @@
         <h1 id="modal-title">What are the rules of Promotion Chess?</h1>
     </header>
     <section id="modal-body">
-        <p>This is where we would define the rules</p>
+        <h3>Objectives:</h3>
+        <p>The goal of the game is to checkmate the opposing player's king by 
+            placing the king in check (in danger of being taken) in which 
+            the opposing player has no other legal mover to escape check.  
+        </p>
+        <br>
+        <h3>How To Play:</h3>
+        <p>
+            Each player has 15 Pawns and one king. While pawns can attack in any one space direction, 
+            pawns can only move forward (either horizontally, diagonally, or forward vertically) one space. 
+            Pawns cannot move backwards (neither vertically nor diagonally). The king can move in any direction one space.
+            Whenever a player captures one of the opposing player's pieces, the attacking piece will be promoted to the 
+            next highest rank piece. If the opposing piece is more than two ranks higher than the attacking piece, then the 
+            attacking piece will be promoted to the piece that is one rank lower than the opposing piece.
+            <br>
+            <br>
+            All pieces besides the pawn move as they normally would in Chess.
+        </p>
+        <br>
+        <h3>Rankings: from lowest to highest</h3>
+        <div id="container">
+            <img class="column" src="../../img/chesspieces/wikipedia/wP.png" alt="White Pawn">
+            <img class="column" src="../../img/chesspieces/wikipedia/wR.png" alt="White Rook">
+            <img class="column" src="../../img/chesspieces/wikipedia/wB.png" alt="White Bishop">
+            <img class="column" src="../../img/chesspieces/wikipedia/wN.png" alt="White Knight">
+            <img class="column" src="../../img/chesspieces/wikipedia/wQ.png" alt="White Queen">
+
+        </div>
     </section>
     <footer id="modal-footer">
         <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">Go back</button>

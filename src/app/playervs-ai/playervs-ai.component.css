@@ -8,9 +8,11 @@
 
   .column3 {
       flex: 35%;
+      flex-grow: 0;
       padding-left: 5%;
       padding-right: 15%;
       text-align: center;
+      max-height: 100%;
   }
 
   .rulesImg {
@@ -23,8 +25,8 @@
 .moveLooks {
   border-color: black; 
   border-style: solid; 
-  height: 81.5%; 
-  overflow: hidden; 
-  overflow-y: scroll;
+  flex-grow: 0;
+  height: 560px; 
+  overflow: scroll;
   padding-top: 2%;
 }
