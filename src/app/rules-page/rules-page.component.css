@@ -28,7 +28,8 @@
 }
 
 .column {
-    flex: 20;
+    height: 15%;
+    width: 15%;
     padding-left: 2%;
     padding-right: 2%;
 }
